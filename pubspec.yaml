@@ -38,6 +38,8 @@ dependencies:
   #server stuff
   http: ^0.13.3
   web_socket_channel: ^2.1.0
+  file_picker: ^4.2.3
+  dio: ^4.0.0
 
 dev_dependencies:
   flutter_test:
