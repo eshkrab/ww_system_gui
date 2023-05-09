@@ -37,7 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   #server stuff
   http: ^0.13.3
-  web_socket_channel: ^2.1.0
+  socket_io_client: 2.0.2
   file_picker: ^4.2.3
   dio: ^4.0.0
 
