@@ -60,6 +60,21 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  // final ThemeData wwTheme = ThemeData.dark().copyWith(
+  //   primaryColor: Colors.blueGrey[900],
+  //   accentColor: Colors.cyanAccent[700],
+  // );
+  final ThemeData wwDarkTheme = ThemeData.dark().copyWith(
+    colorScheme: ColorScheme.fromSeed(
+        seedColor: Colors.teal, brightness: Brightness.dark),
+    useMaterial3: true,
+  );
+  final ThemeData wwLightTheme = ThemeData.dark().copyWith(
+    colorScheme: ColorScheme.fromSeed(
+        seedColor: Colors.teal, brightness: Brightness.light),
+    useMaterial3: true,
+  );
+
   @override
   Widget build(BuildContext context) {
     final settingsProvider = Provider.of<SettingsProvider>(context);
@@ -67,8 +82,8 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: 'Video App',
       theme: settingsProvider.settings.isDarkModeEnabled
-          ? ThemeData.dark()
-          : ThemeData.light(),
+          ? wwDarkTheme
+          : wwLightTheme,
       home: MyHomePage(
         title: 'Video App',
         isDarkModeEnabled: settingsProvider.settings.isDarkModeEnabled,
@@ -201,7 +216,7 @@ class _MyHomePageState extends State<MyHomePage> {
 //     return MaterialApp(
 //       title: 'Video App',
 //       theme: ThemeData(
-//         primarySwatch: Colors.green,
+//         primarySwatch: .green,
 //       ),
 //       home: MyHomePage(title: 'Video App'),
 //     );
