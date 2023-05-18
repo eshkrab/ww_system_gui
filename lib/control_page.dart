@@ -20,9 +20,6 @@ class _ControlPageState extends State<ControlPage> {
 
   String _imageBytes = "";
   String _lastFrameBytes = "";
-  // IO.Socket? socket;
-
-  // Image _lastFrame;
 
   String get brightnessUrl =>
       'http://${settingsProvider.settings.serverIP}:${settingsProvider.settings.serverPort}/api/brightness';
@@ -31,6 +28,7 @@ class _ControlPageState extends State<ControlPage> {
 
   String _playbackMode = 'loop'; // Default playback mode
   double _brightness = 0; // Default brightness (Range: 0.0 - 1.0)
+  String _playbackState = 'playing';
 
   late Timer _timer;
   int _frameInterval = 1000 ~/ 15; // 30 FPS
@@ -46,11 +44,6 @@ class _ControlPageState extends State<ControlPage> {
       // Decode the frame data to a Uint8List
       return base64Decode(frameData);
     });
-    // _timer = Timer.periodic(Duration(milliseconds: _frameInterval), (timer) {
-    //   if (mounted) {
-    //     setState(() {});
-    //   }
-    // });
   }
 
   @override
@@ -66,30 +59,6 @@ class _ControlPageState extends State<ControlPage> {
         _brightness = value;
       });
     });
-
-    // socket = IO.io(
-    //     'http://${settingsProvider.settings.serverIP}:${settingsProvider.settings.serverPort}');
-    //
-    // socket!.onConnect((_) {
-    //   print('connected');
-    // });
-    //
-    // socket!.on('frame', (data) {
-    //   // Handle the received frame data
-    //   // String encodedFrame = data;
-    //   // Uint8List bytes = base64Decode(encodedFrame);
-    //
-    //   // Since you're updating the UI, make sure to run this in the main isolate
-    //   WidgetsBinding.instance!.addPostFrameCallback((_) {
-    //     setState(() {
-    //       // Assuming you have an Uint8List variable called _imageBytes to hold the image data
-    //       _lastFrameBytes = _imageBytes;
-    //       _imageBytes = data;
-    //     });
-    //   });
-    // });
-    //
-    // socket!.connect();
   }
 
   @override
@@ -98,12 +67,58 @@ class _ControlPageState extends State<ControlPage> {
     super.dispose();
   }
 
-  // Widget _displayImage(String base64String) {
-  //   Uint8List bytes = base64Decode(base64String);
-  //   // Now you can display the image using Image.memory
-  //   // return Image.memory(bytes);
-  //   // You'll need to insert this image widget into your widget tree.
-  // }
+  void togglePlayPause() {
+    setState(() {
+      _playbackState = _playbackState == 'playing' ? 'paused' : 'playing';
+    });
+  }
+
+  Widget _repeatModeButton() {
+    switch (_playbackMode) {
+      case 'loop':
+        return IconButton(
+            onPressed: () {},
+            icon: Icon(
+              Icons.repeat,
+              color: Theme.of(context).colorScheme.onBackground,
+            ));
+      case 'loop_one':
+        return IconButton(
+            onPressed: () {},
+            icon: Icon(
+              Icons.repeat_one,
+              color: Theme.of(context).colorScheme.onBackground,
+            ));
+      default:
+        return IconButton(
+            onPressed: () {},
+            icon: Icon(Icons.repeat),
+            color: Colors.grey[700]);
+    }
+  }
+
+  Widget _playPauseButton() {
+    IconButton play = IconButton(
+      onPressed: () {
+        //add action
+        togglePlayPause();
+        controlService.sendRequest(stateUrl, "state", "start");
+      },
+      icon: Icon(Icons.play_arrow),
+    );
+
+    IconButton pause = IconButton(
+      onPressed: () {
+        //add action
+        togglePlayPause();
+        controlService.sendRequest(stateUrl, "state", "pause");
+      },
+      icon: Icon(Icons.pause_sharp),
+    );
+
+    IconButton button = _playbackState == 'playing' ? play : pause;
+    return button;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -112,6 +127,8 @@ class _ControlPageState extends State<ControlPage> {
         // Image/Video area
         Expanded(
           child: Container(
+            height: 300,
+            width: double.infinity,
             // Add your image or video widget here.
             child: StreamBuilder<Uint8List>(
               stream: _videoStream,
@@ -120,7 +137,10 @@ class _ControlPageState extends State<ControlPage> {
                 if (snapshot.hasData) {
                   return Image.memory(snapshot.data ?? Uint8List(0));
                 } else {
-                  return CircularProgressIndicator(); // Or some other placeholder
+                  // return CircularProgressIndicator(); // Or some other placeholder
+                  return Center(
+                    child: Text('placeholder'),
+                  ); // Or some other placeholder
                 }
               },
             ),
@@ -130,7 +150,7 @@ class _ControlPageState extends State<ControlPage> {
         // New Expanded container for brightness slider and playback mode buttons to take up more width
         Expanded(
           child: Container(
-            margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+            margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
             child: Column(
               children: <Widget>[
                 // New row for brightness slider and playback mode buttons
@@ -152,37 +172,7 @@ class _ControlPageState extends State<ControlPage> {
                         },
                       ),
                     ),
-                    IconButton(
-                      icon: Icon(Icons.loop),
-                      color:
-                          _playbackMode == 'loop' ? Colors.green : Colors.grey,
-                      onPressed: () {
-                        setState(() {
-                          _playbackMode = 'loop';
-                        });
-                      },
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.repeat_one),
-                      color: _playbackMode == 'loop_one'
-                          ? Colors.green
-                          : Colors.grey,
-                      onPressed: () {
-                        setState(() {
-                          _playbackMode = 'loop_one';
-                        });
-                      },
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.pause),
-                      color:
-                          _playbackMode == 'halt' ? Colors.green : Colors.grey,
-                      onPressed: () {
-                        setState(() {
-                          _playbackMode = 'halt';
-                        });
-                      },
-                    ),
+                    _repeatModeButton(),
                   ],
                 ),
 
@@ -191,22 +181,30 @@ class _ControlPageState extends State<ControlPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     IconButton(
-                      icon: Icon(Icons.play_arrow),
                       onPressed: () {
-                        controlService.sendRequest(stateUrl, "state", "start");
-                      },
+                        controlService.sendRequest(stateUrl, "state", "prev");
+                      }, // Implement previous button functionality
+                      icon: Icon(Icons.skip_previous),
                     ),
-                    IconButton(
-                      icon: Icon(Icons.pause),
-                      onPressed: () {
-                        controlService.sendRequest(stateUrl, "state", "pause");
-                      },
-                    ),
+                    _playPauseButton(),
                     IconButton(
                       icon: Icon(Icons.stop),
                       onPressed: () {
                         controlService.sendRequest(stateUrl, "state", "stop");
                       },
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        controlService.sendRequest(
+                            stateUrl, "state", "restart");
+                      }, // Implement restart button functionality
+                      icon: Icon(Icons.refresh),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        controlService.sendRequest(stateUrl, "state", "next");
+                      }, // Implement next button functionality
+                      icon: Icon(Icons.skip_next),
                     ),
                   ],
                 ),
@@ -217,22 +215,4 @@ class _ControlPageState extends State<ControlPage> {
       ],
     );
   }
-
-  // Future<void> sendRequest(String url, String f, String state) async {
-  //   final response = await http.post(Uri.parse(url), body: {f: state});
-  //   if (response.statusCode != 200) {
-  //     print(response.body); // Add this line to log the response body
-  //     throw Exception('Failed to send request');
-  //   }
-  // }
-  //
-  // Future<double> _getBrightness() async {
-  //   final response = await http.get(Uri.parse(brightnessUrl));
-  //   if (response.statusCode == 200) {
-  //     // return double.parse(json.decode(response.body)["brightness"]);
-  //     return json.decode(response.body)["brightness"].toDouble() / 100.0;
-  //   } else {
-  //     throw Exception('Failed to get brightness');
-  //   }
-  // }
 }

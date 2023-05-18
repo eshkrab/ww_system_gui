@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-String _defaultIp = '192.168.86.22';
-int _defaultPort = 5000;
+String _defaultIp = 'localhost';
+int _defaultPort = 8000;
 
 class Settings {
   final String serverIP;
@@ -93,15 +93,18 @@ class SettingsPage extends StatelessWidget {
                   text: settingsProvider.settings.serverPort.toString()),
             ),
             SizedBox(height: 16.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Dark Mode'),
-                Switch(
-                  value: settingsProvider.settings.isDarkModeEnabled,
-                  onChanged: (value) => settingsProvider.toggleDarkMode(),
-                ),
-              ],
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 50),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('App Dark Mode'),
+                  Switch(
+                    value: settingsProvider.settings.isDarkModeEnabled,
+                    onChanged: (value) => settingsProvider.toggleDarkMode(),
+                  ),
+                ],
+              ),
             ),
           ],
         ),

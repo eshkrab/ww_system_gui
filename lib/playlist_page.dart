@@ -39,25 +39,6 @@ class _PlaylistPageState extends State<PlaylistPage> {
     // _fetchVideoDirectory();
   }
 
-  // @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
-  //   // listen to changes in theme brightness
-  //   videoService = Provider.of<VideoService>(context, listen: false);
-  //   settingsProvider = Provider.of<SettingsProvider>(context, listen: false);
-  //
-  //   List<String> playlist = await videoService.fetchPlaylist();
-  //   setState(() {
-  //     _playlist = playlist;
-  //   });
-  //   // videoService.fetchPlaylist().then((List<String> value) {
-  //   //   setState(() {
-  //   //     _playlist = value;
-  //   //   });
-  //   // }).catchError((error) {
-  //   //   // handle error here
-  //   // });
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -100,57 +81,6 @@ class _PlaylistPageState extends State<PlaylistPage> {
     });
   }
 
-  // Future<void> _fetchVideoDirectory() async {
-  //   final response =
-  //       await http.get(Uri.parse('http://192.168.86.22:5000/api/videos'));
-  //
-  //   if (response.statusCode == 200) {
-  //     setState(() {
-  //       _videoDirectory =
-  //           List<String>.from(jsonDecode(response.body)['videos']);
-  //     });
-  //   } else {
-  //     throw Exception('Failed to load video directory');
-  //   }
-  // }
-  //
-  // Future<void> _uploadVideo() async {
-  //   FilePickerResult? result = await FilePicker.platform.pickFiles(
-  //       type: FileType.custom, allowedExtensions: ['mp4', 'avi', 'mov']);
-  //
-  //   if (result != null) {
-  //     Uint8List fileBytes = result.files.single.bytes!;
-  //     String fileName = result.files.single.name;
-  //
-  //     MultipartFile multipartFile = MultipartFile.fromBytes(
-  //       fileBytes,
-  //       filename: fileName,
-  //     );
-  //
-  //     FormData formData = FormData.fromMap({'file': multipartFile});
-  //
-  //     // Create a Dio instance
-  //     Dio dio = Dio();
-  //
-  //     try {
-  //       var response = await dio.post(
-  //           'http://192.168.86.22:5000/api/videos/upload',
-  //           data: formData);
-  //       if (response.statusCode == 200 && response.data['success'] == true) {
-  //         print('Video uploaded successfully');
-  //         // Refetch the video directory after uploading the video
-  //         _fetchVideoDirectory();
-  //       } else {
-  //         print('Failed to upload video');
-  //       }
-  //     } catch (e) {
-  //       print('Error while uploading video: $e');
-  //     }
-  //   } else {
-  //     print('No file selected');
-  //   }
-  // }
-
   Future<bool?> _showDeleteConfirmationDialog() async {
     return await showDialog<bool>(
       context: context,
@@ -172,56 +102,6 @@ class _PlaylistPageState extends State<PlaylistPage> {
       },
     );
   }
-
-  // Future<void> _deleteVideo(String filename) async {
-  //   bool? shouldDelete = await _showDeleteConfirmationDialog();
-  //   if (shouldDelete == true) {
-  //     final response = await http.post(
-  //       Uri.parse('http://192.168.86.22:5000/api/videos/delete'),
-  //       body: {'filename': filename},
-  //     );
-  //
-  //     if (response.statusCode == 200) {
-  //       setState(() {
-  //         _videoDirectory.remove(filename);
-  //       });
-  //     } else {
-  //       throw Exception('Failed to delete video');
-  //     }
-  //   }
-  // }
-  //
-  // Future<void> _fetchPlaylist() async {
-  //   // Replace 'localhost' with your server's IP address or domain name
-  //   final response =
-  //       await http.get(Uri.parse('http://192.168.86.22:5000/api/playlist'));
-  //
-  //   if (response.statusCode == 200) {
-  //     var data = jsonDecode(response.body);
-  //     setState(() {
-  //       _playlist = List<String>.from(data['playlist']);
-  //       _playbackMode = data['mode'];
-  //     });
-  //   } else {
-  //     throw Exception('Failed to load playlist');
-  //   }
-  // }
-  //
-  // Future<void> _savePlaylist() async {
-  //   // Replace 'localhost' with your server's IP address or domain name
-  //   final response = await http.post(
-  //     Uri.parse('http://192.168.86.22:5000/api/playlist'),
-  //     headers: {'Content-Type': 'application/json'},
-  //     body: jsonEncode({'playlist': _playlist, 'mode': _playbackMode}),
-  //   );
-  //
-  //   if (response.statusCode != 200) {
-  //     throw Exception('Failed to save playlist');
-  //   } else {
-  //     _fetchPlaylist();
-  //     _toggleEditing(); //Exit editing mode after saving
-  //   }
-  // }
 
   void _addItem(String item) {
     setState(() {
@@ -313,9 +193,9 @@ class _PlaylistPageState extends State<PlaylistPage> {
                   },
                   child: Text('Save'),
                   style: TextButton.styleFrom(
-                    backgroundColor: Colors.green,
-                    primary: Colors.white,
-                  ),
+                      // backgroundColor: Colors.green,
+                      // primary: Colors.white,
+                      ),
                 ),
               // Add upload and delete buttons here
               SizedBox(width: 10),
@@ -323,9 +203,9 @@ class _PlaylistPageState extends State<PlaylistPage> {
                 onPressed: _toggleEditing,
                 child: Text(_editing ? 'Cancel' : 'Edit'),
                 style: TextButton.styleFrom(
-                  backgroundColor: Colors.green,
-                  primary: Colors.white,
-                ),
+                    // backgroundColor: Colors.green,
+                    // primary: Colors.white,
+                    ),
               ),
             ],
           ),
@@ -423,8 +303,9 @@ class _PlaylistPageState extends State<PlaylistPage> {
                           },
                           child: Text('Upload'),
                           style: TextButton.styleFrom(
-                            backgroundColor: Colors.green,
-                            primary: Colors.white,
+                            backgroundColor:
+                                Theme.of(context).colorScheme.primaryContainer,
+                            primary: Theme.of(context).colorScheme.primary,
                           ),
                         ),
                 ],
@@ -434,9 +315,9 @@ class _PlaylistPageState extends State<PlaylistPage> {
                 onPressed: _toggleVideoDirectoryEditing,
                 child: Text(_editingVideoDirectory ? 'Done' : 'Edit'),
                 style: TextButton.styleFrom(
-                  backgroundColor: Colors.green,
-                  primary: Colors.white,
-                ),
+                    // backgroundColor: Colors.green,
+                    // primary: Colors.white,
+                    ),
               ),
             ],
           ),
