@@ -25,7 +25,7 @@ class _PlaylistPageState extends State<PlaylistPage> {
   List<String> _playlist = [];
   List<String> _videoDirectory = [];
   String? _selectedVideo;
-  String _playbackMode = "LOOP";
+  String _playbackMode = "REPEAT";
   Color? _altBgColor = Colors.transparent;
 
   bool _editing = false;
@@ -131,7 +131,7 @@ class _PlaylistPageState extends State<PlaylistPage> {
         Text('Playback Mode:  '),
         DropdownButton<String>(
           value: _playbackMode,
-          items: ['LOOP', 'HOLD', 'ZERO'].map((String value) {
+          items: ['REPEAT', 'REPEAT_ONE', 'STOP'].map((String value) {
             return DropdownMenuItem<String>(
               value: value,
               child: Text(value),

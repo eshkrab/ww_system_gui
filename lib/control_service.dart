@@ -25,7 +25,7 @@ class ControlService {
         .get(Uri.parse('http://$serverIP:$serverPort/api/brightness'));
 
     if (response.statusCode == 200) {
-      return (jsonDecode(response.body)['brightness']).toDouble() / 100.0;
+      return jsonDecode(response.body)['brightness'].toDouble();
     } else {
       throw Exception('Failed to fetch brightness');
     }
@@ -34,7 +34,9 @@ class ControlService {
   Future<void> updateBrightness(double brightness) async {
     final response = await http.post(
       Uri.parse('http://$serverIP:$serverPort/api/brightness'),
-      body: {'brightness': (brightness * 100.0).toStringAsFixed(0)},
+      body: {
+        'brightness': brightness.toStringAsFixed(2)
+      }, // brightness in range 0.0 to 1.0
     );
 
     if (response.statusCode != 200) {

@@ -75,14 +75,14 @@ class _ControlPageState extends State<ControlPage> {
 
   Widget _repeatModeButton() {
     switch (_playbackMode) {
-      case 'loop':
+      case 'repeat':
         return IconButton(
             onPressed: () {},
             icon: Icon(
               Icons.repeat,
               color: Theme.of(context).colorScheme.onBackground,
             ));
-      case 'loop_one':
+      case 'repeat_one':
         return IconButton(
             onPressed: () {},
             icon: Icon(
@@ -102,7 +102,7 @@ class _ControlPageState extends State<ControlPage> {
       onPressed: () {
         //add action
         togglePlayPause();
-        controlService.sendRequest(stateUrl, "state", "start");
+        controlService.sendRequest(stateUrl, "state", "play");
       },
       icon: Icon(Icons.play_arrow),
     );
@@ -159,6 +159,9 @@ class _ControlPageState extends State<ControlPage> {
                     Expanded(
                       child: Slider(
                         value: _brightness,
+                        min: 0.0,
+                        max: 1.0,
+                        divisions: 255,
                         onChanged: (double value) {
                           setState(() {
                             _brightness = value;
