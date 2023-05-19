@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-String _defaultIp = 'localhost';
+// String _defaultIp = 'ww_system-server-1';
+// String _defaultIp = 'server';
+String _defaultIp = '192.168.86.144';
 int _defaultPort = 8000;
 
 class Settings {
