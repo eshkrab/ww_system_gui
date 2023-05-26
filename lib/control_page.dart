@@ -83,135 +83,76 @@ class _ControlPageState extends State<ControlPage> {
     super.dispose();
   }
 
-  // void togglePlayPause() {
-  //   setState(() {
-  //     _playerState = _playerState == playerStatePlaying
-  //         ? playerStatePaused
-  //         : playerStatePlaying;
-  //   });
-  // }
-
   Widget _repeatModeButton() {
-    IconData repeatIcon;
-    Color color;
-    String playerMode = playerModeProvider.playerMode;
+    return Consumer<PlayerModeProvider>(builder: (context, provider, child) {
+      IconData repeatIcon;
+      String playerMode = provider.playerMode;
 
-    switch (playerMode) {
-      case playerModeRepeat:
-        repeatIcon = Icons.repeat;
-        // color = Theme.of(context).colorScheme.onBackground;
-        playerMode = playerModeRepeat;
-        break;
-      case playerModeRepeatOne:
-        repeatIcon = Icons.repeat_one;
-        // color = Theme.of(context).colorScheme.onBackground;
-        playerMode = playerModeRepeatOne;
-        break;
-      default:
-        repeatIcon = Icons.stop;
-        // color = Theme.of(context).colorScheme.secondary;
-        playerMode = playerModeStop;
-    }
+      switch (playerMode) {
+        case playerModeRepeat:
+          repeatIcon = Icons.repeat;
+          playerMode = playerModeRepeat;
+          break;
+        case playerModeRepeatOne:
+          repeatIcon = Icons.repeat_one;
+          playerMode = playerModeRepeatOne;
+          break;
+        default:
+          repeatIcon = Icons.stop;
+          playerMode = playerModeStop;
+      }
 
-    return IconButton(
-      onPressed: () async {
-        // commandQueue.add(() async {
-        bool success =
-            await controlService.setMode(playerMode, settingsProvider);
-        if (success) {
-          playerModeProvider.setPlayerMode(playerMode);
-        } else {
-          print("Error setting mode:");
-        }
-        // return success;
-        // });
-      },
-      icon: Icon(
-        repeatIcon,
-      ),
-    );
+      return IconButton(
+        onPressed: () async {
+          bool success =
+              await controlService.setMode(playerMode, settingsProvider);
+          if (success) {
+            provider.setPlayerMode(playerMode);
+          } else {
+            print("Error setting mode:");
+          }
+        },
+        icon: Icon(
+          repeatIcon,
+        ),
+      );
+    });
   }
 
   Widget _playPauseButton() {
-    return Builder(
-      builder: (BuildContext context) {
-        final String playerState = context.select<PlayerStateProvider, String>(
-            (provider) => provider.playerState);
-        Icon showIcon;
-        String playerStateText;
+    return Consumer<PlayerStateProvider>(builder: (context, provider, child) {
+      Icon showIcon;
+      String playerStateText;
+      String playerState = provider.playerState;
 
-        //if player is playing, show pause button
-        //if player is paused, show play button
-        if (playerState == playerStatePaused) {
-          showIcon = Icon(Icons.play_arrow);
-          playerStateText = "play";
-        } else if (playerState == playerStatePlaying) {
-          showIcon = Icon(Icons.pause_sharp);
-          playerStateText = "pause";
-        } else {
-          showIcon = Icon(Icons.play_arrow);
-          playerStateText = "play";
-        }
+      if (playerState == playerStatePaused) {
+        showIcon = Icon(Icons.play_arrow);
+        playerStateText = "play";
+      } else if (playerState == playerStatePlaying) {
+        showIcon = Icon(Icons.pause_sharp);
+        playerStateText = "pause";
+      } else {
+        showIcon = Icon(Icons.play_arrow);
+        playerStateText = "play";
+      }
 
-        //print state of player
-        print("PLAYPAUSE BUTTON Player state: $playerState");
-
-        return IconButton(
-            onPressed: () async {
-              bool success = await controlService.setState(
-                  playerStateText, settingsProvider);
-              if (success) {
-                print("Success setting state to $playerStateText ");
-                controlService.getState(settingsProvider).then((value) =>
-                    playerStateProvider.setPlayerState(playerStateText));
-              } else {
-                print("Error setting state to ");
-              }
-            },
-            icon: showIcon);
-      },
-    );
+      return IconButton(
+        onPressed: () async {
+          bool success =
+              await controlService.setState(playerStateText, settingsProvider);
+          if (success) {
+            print("Success setting state to $playerStateText ");
+            controlService
+                .getState(settingsProvider)
+                .then((value) => provider.setPlayerState(playerStateText));
+          } else {
+            print("Error setting state to ");
+          }
+        },
+        icon: showIcon,
+      );
+    });
   }
-
-  // Widget _playPauseButton() {
-  //   return Consumer<PlayerStateProvider>(
-  //     builder: (context, playerStateProvider, child) {
-  //       String playerState = playerStateProvider.playerState;
-  //       Icon showIcon;
-  //       String playerStateText;
-  //       //if player is playing, show pause button
-  //       //if player is paused, show play button
-  //       if (playerState == playerStatePaused) {
-  //         showIcon = Icon(Icons.play_arrow);
-  //         playerStateText = "play";
-  //       } else if (playerState == playerStatePlaying) {
-  //         showIcon = Icon(Icons.pause_sharp);
-  //         playerStateText = "pause";
-  //       } else {
-  //         showIcon = Icon(Icons.print);
-  //         playerStateText = "play";
-  //       }
-  //
-  //       //print state of player
-  //       print("PLAYPAUSE BUTTON Player state: $playerState");
-  //
-  //       return IconButton(
-  //           onPressed: () async {
-  //             bool success = await controlService.setState(
-  //                 playerStateText, settingsProvider);
-  //             if (success) {
-  //               controlService
-  //                   .getState(settingsProvider)
-  //                   .then((value) => playerStateProvider.setPlayerState(value));
-  //             } else {
-  //               print("Error setting state to ");
-  //             }
-  //           },
-  //           icon: showIcon);
-  //     },
-  //   );
-  // }
-  //
 
   @override
   Widget build(BuildContext context) {
