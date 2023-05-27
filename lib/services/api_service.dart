@@ -6,12 +6,12 @@ import 'package:http/http.dart' as http;
 import 'package:trophy_gui/settings_page.dart';
 
 class ApiService {
-  final SettingsProvider settingsProvider;
+  final AppSettings _appSettings;
 
-  ApiService({required this.settingsProvider});
+  ApiService(this._appSettings);
 
   String getBaseUrl() {
-    return 'http://${settingsProvider.settings.serverIP}:${settingsProvider.settings.serverPort}/api';
+    return 'http://${_appSettings.serverIP}:${_appSettings.serverPort}/api';
   }
 }
 
@@ -20,17 +20,17 @@ class MediaApiService extends ApiService {
       : super(settingsProvider: settingsProvider);
 
   // Methods for uploading and deleting media files
-  Future<List<String>> fetchVideoDirectory() async {
+  Future<List<String>> fetchMediaDirectory() async {
     final response = await http.get(Uri.parse('${getBaseUrl()}/state'));
 
     if (response.statusCode == 200) {
       return List<String>.from(jsonDecode(response.body)['videos']);
     } else {
-      throw Exception('Failed to load video directory');
+      throw Exception('Failed to load media directory');
     }
   }
 
-  Future<bool> uploadVideo() async {
+  Future<bool> uploadMedia() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['mp4', 'avi', 'mov'],
@@ -56,15 +56,15 @@ class MediaApiService extends ApiService {
           data: formData,
         );
         if (response.statusCode == 200 && response.data['success'] == true) {
-          print('Video uploaded successfully');
-          // Refetch the video directory after uploading the video
+          print('Media uploaded successfully');
+          // Refetch the media directory after uploading the media
           return true;
         } else {
-          print('Failed to upload video');
+          print('Failed to upload media');
           return false;
         }
       } catch (e) {
-        print('Error while uploading video: $e');
+        print('Error while uploading media: $e');
         return false;
       }
     } else {
@@ -73,14 +73,14 @@ class MediaApiService extends ApiService {
     }
   }
 
-  Future<void> deleteVideo(String filename) async {
+  Future<void> deleteMedia(String filename) async {
     final response = await http.post(
       Uri.parse('${getBaseUrl()}/videos/delete'),
       body: {'filename': filename},
     );
 
     if (response.statusCode != 200) {
-      throw Exception('Failed to delete video');
+      throw Exception('Failed to delete media');
     }
   }
 }
