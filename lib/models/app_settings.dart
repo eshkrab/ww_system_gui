@@ -1,7 +1,7 @@
 class AppSettings {
   bool isDarkModeEnabled = true;
-  String serverIP = '';
-  int serverPort = 0;
+  String serverIP = '192.168.86.144';
+  int serverPort = 8000;
 
   AppSettings({
     required this.isDarkModeEnabled,

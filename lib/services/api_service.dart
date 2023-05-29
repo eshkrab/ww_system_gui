@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:http/http.dart' as http;
-import 'package:trophy_gui/settings_page.dart';
+import '../models/app_settings.dart';
 
 class ApiService {
   final AppSettings _appSettings;
@@ -16,8 +16,8 @@ class ApiService {
 }
 
 class MediaApiService extends ApiService {
-  MediaApiService({required SettingsProvider settingsProvider})
-      : super(settingsProvider: settingsProvider);
+  MediaApiService({required AppSettings appSettings})
+      : super(appSettings: appSettings);
 
   // Methods for uploading and deleting media files
   Future<List<String>> fetchMediaDirectory() async {
@@ -86,8 +86,8 @@ class MediaApiService extends ApiService {
 }
 
 class PlaylistApiService extends ApiService {
-  PlaylistApiService({required SettingsProvider settingsProvider})
-      : super(settingsProvider: settingsProvider);
+  PlaylistApiService({required AppSettings appSettings})
+      : super(appSettings: appSettings);
 
   // Methods for getting and changing the playlist
   Future<List<String>> fetchPlaylist() async {
@@ -115,8 +115,8 @@ class PlaylistApiService extends ApiService {
 }
 
 class PlayerApiService extends ApiService {
-  PlayerApiService({required SettingsProvider settingsProvider})
-      : super(settingsProvider: settingsProvider);
+  PlayerApiService({required AppSettings appSettings})
+      : super(appSettings: appSettings);
 
   // Methods for controlling the player
   Future<String> getState() async {
@@ -174,8 +174,8 @@ class PlayerApiService extends ApiService {
 }
 
 class SettingsApiService extends ApiService {
-  SettingsApiService({required SettingsProvider settingsProvider})
-      : super(settingsProvider: settingsProvider);
+  SettingsApiService({required AppSettings appSettings})
+      : super(appSettings: appSettings);
 
   // Methods for getting and setting brightness or other settings
   Future<double> getBrightness() async {

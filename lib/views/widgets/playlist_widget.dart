@@ -6,10 +6,10 @@ import '../../view_models/player_view_model.dart';
 class PlaylistWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final playlistViewModel =
-        Provider.of<PlaylistViewModel>(context, listen: false);
+    final playerViewModel =
+        Provider.of<PlayerViewModel>(context, listen: false);
 
-    return Consumer<PlaylistViewModel>(
+    return Consumer<PlayerViewModel>(
       builder: (context, model, child) => Column(
         children: [
           ElevatedButton(
@@ -22,17 +22,17 @@ class PlaylistWidget extends StatelessWidget {
             child: ReorderableList(
               onReorder: model.isEditMode ? model.movePlaylistItem : null,
               child: ListView.builder(
-                itemCount: model.playlistItems.length,
+                itemCount: model.player.playlist.length,
                 itemBuilder: (context, index) {
                   return ReorderableItem(
-                    key: Key(model.playlistItems[index].title),
+                    key: Key(model.player.playlist[index].filename),
                     childBuilder:
                         (BuildContext context, ReorderableItemState state) {
                       return ListTile(
                         tileColor: index % 2 == 0
                             ? Theme.of(context).colorScheme.surface
                             : Theme.of(context).colorScheme.primaryVariant,
-                        title: Text(model.playlistItems[index].title),
+                        title: Text(model.player.playlist[index].filename),
                         trailing: model.isEditMode
                             ? IconButton(
                                 icon: Icon(Icons.delete),
@@ -62,7 +62,7 @@ class PlaylistWidget extends StatelessWidget {
                         itemCount: model.mediaItems.length,
                         itemBuilder: (BuildContext context, int index) {
                           return ListTile(
-                            title: Text(model.mediaItems[index].title),
+                            title: Text(model.mediaItems[index].filename),
                             trailing: IconButton(
                               icon: Icon(Icons.add),
                               onPressed: () {
@@ -81,3 +81,4 @@ class PlaylistWidget extends StatelessWidget {
     );
   }
 }
+

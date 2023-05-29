@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:trophy_gui/view_models/app_settings_view_model.dart';
-import 'package:trophy_gui/view_models/player_settings_view_model.dart';
+import '../../view_models/settings_view_model.dart';
+import '../../view_models/player_view_model.dart';
 
 class SettingsFormWidget extends StatefulWidget {
   @override
@@ -20,8 +20,7 @@ class _SettingsFormWidgetState extends State<SettingsFormWidget> {
   @override
   Widget build(BuildContext context) {
     final appSettingsViewModel = Provider.of<AppSettingsViewModel>(context);
-    final playerSettingsViewModel =
-        Provider.of<PlayerSettingsViewModel>(context);
+    final playerViewModel = Provider.of<PlayerViewModel>(context);
 
     return Form(
       key: _formKey,
@@ -49,7 +48,9 @@ class _SettingsFormWidgetState extends State<SettingsFormWidget> {
               serverPort = value ?? '';
             },
             validator: (value) {
-              if (int.tryParse(value!) == null || int.parse(value) < 1 || int.parse(value) > 65535) {
+              if (int.tryParse(value!) == null ||
+                  int.parse(value) < 1 ||
+                  int.parse(value) > 65535) {
                 return 'Please enter a valid port number (1-65535)';
               }
               return null;
@@ -65,27 +66,25 @@ class _SettingsFormWidgetState extends State<SettingsFormWidget> {
               });
             },
           ),
-         ListTile(
+          ListTile(
             title: Text('Brightness'),
             subtitle: Slider(
-              value: playerSettingsViewModel.brightness,
-              onChanged: (value) {
-                setState(() {
-                  brightness = value;
-                  playerSettingsViewModel.setBrightness(value);
-                });
+              value: playerViewModel.player.brightness,
+              min: 0.0,
+              max: 1.0,
+              onChanged: (value) async {
+                await playerViewModel.setBrightness(value);
               },
             ),
           ),
           ListTile(
             title: Text('FPS (Frames per Second)'),
             subtitle: Slider(
-              value: playerSettingsViewModel.fps,
-              onChanged: (value) {
-                setState(() {
-                  fps = value;
-                  playerSettingsViewModel.setFPS(value);
-                });
+              value: playerViewModel.player.fps,
+              min: 0.0,
+              max: 60.0,
+              onChanged: (value) async {
+                await playerViewModel.setFPS(value);
               },
             ),
           ),
