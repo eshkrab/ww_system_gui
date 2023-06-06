@@ -1,34 +1,77 @@
 import 'package:flutter/material.dart';
+import 'package:trophy_gui/view_models/playlist_view_model.dart';
 import '../services/api_service.dart';
 import '../models/player.dart';
 import '../models/media.dart';
+import '../models/app_settings.dart';
+import '../view_models/playlist_view_model.dart';
 
 class PlayerViewModel extends ChangeNotifier {
   final PlayerApiService _playerApiService;
-  Player player = Player(
-      playlist: [],
-      state: 'stopped',
-      mode: 'normal',
-      brightness: 0.0,
-      fps: 0.0);
+  final SettingsApiService _settingsApiService;
 
-  List<Media> mediaItems = []; // Mock your media items here.
   bool isEditMode = false; // Track if we're in edit mode or not
 
-  PlayerViewModel({required PlayerApiService playerApiService})
-      : _playerApiService = playerApiService;
+  Player player = Player(state: 'stopped', brightness: 0.0, fps: 0.0);
 
-  Future<void> fetchStateAndMode() async {
+  // List<MediaFile> mediaItems = []; // Mock your media items here.
+
+  PlayerViewModel({required AppSettings settings})
+      : _playerApiService = PlayerApiService(appSettings: settings),
+        _settingsApiService = SettingsApiService(appSettings: settings);
+
+  Future<bool> next() async {
+    bool success = await _playerApiService.setState('next');
+    fetchState();
+    notifyListeners();
+    return success;
+  }
+
+  Future<bool> previous() async {
+    bool success = await _playerApiService.setState('prev');
+    fetchState();
+    notifyListeners();
+    return success;
+  }
+
+  Future<bool> play() async {
+    bool success = await _playerApiService.setState('play');
+    fetchState();
+    notifyListeners();
+    return success;
+  }
+
+  Future<bool> pause() async {
+    bool success = await _playerApiService.setState('pause');
+    fetchState();
+    notifyListeners();
+    return success;
+  }
+
+  Future<bool> stop() async {
+    bool success = await _playerApiService.setState('stop');
+    fetchState();
+    notifyListeners();
+    return success;
+  }
+
+  Future<bool> restart() async {
+    bool success = await _playerApiService.setState('restart');
+    fetchState();
+    notifyListeners();
+    return success;
+  }
+
+  Future<void> fetchState() async {
     String state = await _playerApiService.getState();
-    String mode = await _playerApiService.getMode();
-    List<String> playlist = await _playerApiService.fetchPlaylist();
-    double brightness = await _playerApiService.getBrightness();
-    double fps = await _playerApiService.getFPS();
+    // String mode = await _playerApiService.getMode();
+    // List<String> playlist = await _playlistApiService.fetchPlaylist();
+    double brightness = await _settingsApiService.getBrightness();
+    double fps = await _settingsApiService.getFPS();
 
     player = Player(
-      playlist: playlist.map((m) => Media(filename: m)).toList(),
+      // playlist: playlist.map((m) => MediaFile(filename: m)).toList(),
       state: state,
-      mode: mode,
       brightness: brightness,
       fps: fps,
     );
@@ -38,22 +81,40 @@ class PlayerViewModel extends ChangeNotifier {
 
   Future<void> setState(String value) async {
     await _playerApiService.setState(value);
-    fetchStateAndMode();
+    getState();
+    notifyListeners();
   }
 
-  Future<void> setMode(String value) async {
-    await _playerApiService.setMode(value);
-    fetchStateAndMode();
+  Future<String> getState() async {
+    String state = await _playerApiService.getState();
+    return state;
   }
 
   Future<void> setBrightness(double value) async {
-    await _playerApiService.setBrightness(value);
-    fetchStateAndMode();
+    bool success = await _settingsApiService.setBrightness(value);
+    if (!success) {
+      throw Exception('Failed to set brightness');
+    }
+    getBrightness();
+    notifyListeners();
+  }
+
+  Future<double> getBrightness() async {
+    double brightness = await _settingsApiService.getBrightness();
+    notifyListeners();
+    return brightness;
   }
 
   Future<void> setFPS(double value) async {
-    await _playerApiService.setFPS(value);
-    fetchStateAndMode();
+    await _settingsApiService.setFPS(value);
+    getFPS();
+    notifyListeners();
+  }
+
+  Future<double> getFPS() async {
+    double fps = await _settingsApiService.getFPS();
+    notifyListeners();
+    return fps;
   }
 
   // Toggle edit mode
@@ -61,30 +122,4 @@ class PlayerViewModel extends ChangeNotifier {
     isEditMode = !isEditMode;
     notifyListeners();
   }
-
-  // Add media item to playlist
-  void addMediaItemToPlaylist(int index) {
-    player.playlist.add(mediaItems[index]);
-    // If your service has a method to update playlist, call here.
-    notifyListeners();
-  }
-
-  // Delete media item from playlist
-  void deletePlaylistItem(int index) {
-    player.playlist.removeAt(index);
-    // If your service has a method to update playlist, call here.
-    notifyListeners();
-  }
-
-  // Move media item within playlist
-  void movePlaylistItem(int oldIndex, int newIndex) {
-    if (oldIndex < newIndex) {
-      // newIndex -= 1; // uncomment this if you're intending to use Drag&Drop. 
-    }
-    final Media item = player.playlist.removeAt(oldIndex);
-    player.playlist.insert(newIndex, item);
-    // If your service has a method to update playlist, call here.
-    notifyListeners();
-  }
 }
-

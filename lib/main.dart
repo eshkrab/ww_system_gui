@@ -19,12 +19,25 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    AppSettings appSettings = AppSettings(
+        isDarkModeEnabled: true, serverIP: '192.168.86.144', serverPort: 8080);
+
+    final mediaApiService = MediaApiService(appSettings: appSettings);
+    final playlistApiService = PlaylistApiService(appSettings: appSettings);
+    final playerApiService = PlayerApiService(appSettings: appSettings);
+    final settingsApiService = SettingsApiService(appSettings: appSettings);
+
+    // Pass the AppSettingsViewModel and API services to your PlayerViewModel
+    final playerViewModel = PlayerViewModel(
+      playerApiService: playerApiService,
+    );
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => SettingsViewModel()),
         ChangeNotifierProvider(
-            create: (_) =>
-                PlayerViewModel(playerApiService: PlayerApiService())),
+            create: (_) => PlayerViewModel(
+                playerApiService:
+                    PlayerApiService(SettingsViewModel.appSettings))),
         ChangeNotifierProvider(
             create: (_) => MediaViewModel(mediaApiService: MediaApiService())),
         ProxyProvider<SettingsViewModel, ApiService>(

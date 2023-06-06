@@ -16,8 +16,7 @@ class ApiService {
 }
 
 class MediaApiService extends ApiService {
-  MediaApiService({required AppSettings appSettings})
-      : super(appSettings: appSettings);
+  MediaApiService({required AppSettings appSettings}) : super(appSettings);
 
   // Methods for uploading and deleting media files
   Future<List<String>> fetchMediaDirectory() async {
@@ -86,20 +85,30 @@ class MediaApiService extends ApiService {
 }
 
 class PlaylistApiService extends ApiService {
-  PlaylistApiService({required AppSettings appSettings})
-      : super(appSettings: appSettings);
+  PlaylistApiService({required AppSettings appSettings}) : super(appSettings);
 
   // Methods for getting and changing the playlist
   Future<List<String>> fetchPlaylist() async {
     final response = await http.get(Uri.parse('${getBaseUrl()}/playlist'));
 
     if (response.statusCode == 200) {
-      final playlistData = jsonDecode(response.body);
-      return List<String>.from(playlistData['playlist']);
+      final playlistData = jsonDecode(response.body) as Map<String, dynamic>;
+      return (playlistData['playlist'] as List).cast<String>();
     } else {
       throw Exception('Failed to load playlist');
     }
   }
+
+  // Future<List<String>> fetchPlaylist() async {
+  //   final response = await http.get(Uri.parse('${getBaseUrl()}/playlist'));
+  //
+  //   if (response.statusCode == 200) {
+  //     final playlistData = jsonDecode(response.body);
+  //     return List<String>.from(playlistData['playlist']);
+  //   } else {
+  //     throw Exception('Failed to load playlist');
+  //   }
+  // }
 
   Future<void> savePlaylist(List<String> playlist, String mode) async {
     final response = await http.post(
@@ -112,11 +121,36 @@ class PlaylistApiService extends ApiService {
       throw Exception('Failed to save playlist');
     }
   }
+
+  Future<String> getMode() async {
+    String stateUrl = '${getBaseUrl()}/mode';
+    final response = await http.get(Uri.parse(stateUrl));
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body)['mode'];
+    } else {
+      throw Exception('Failed to fetch mode');
+    }
+  }
+
+  Future<bool> setMode(String value) async {
+    String stateUrl = '${getBaseUrl()}/mode';
+    final response = await http.post(
+      Uri.parse(stateUrl),
+      body: {'mode': value},
+    );
+
+    if (response.statusCode != 200) {
+      print(response.statusCode);
+      return false;
+      // throw Exception('Failed to send mode');
+    }
+    return true;
+  }
 }
 
 class PlayerApiService extends ApiService {
-  PlayerApiService({required AppSettings appSettings})
-      : super(appSettings: appSettings);
+  PlayerApiService({required AppSettings appSettings}) : super(appSettings);
 
   // Methods for controlling the player
   Future<String> getState() async {
@@ -171,11 +205,6 @@ class PlayerApiService extends ApiService {
     }
     return true;
   }
-}
-
-class SettingsApiService extends ApiService {
-  SettingsApiService({required AppSettings appSettings})
-      : super(appSettings: appSettings);
 
   // Methods for getting and setting brightness or other settings
   Future<double> getBrightness() async {
@@ -230,4 +259,8 @@ class SettingsApiService extends ApiService {
     }
     return true;
   }
+}
+
+class SettingsApiService extends ApiService {
+  SettingsApiService({required AppSettings appSettings}) : super(appSettings);
 }
