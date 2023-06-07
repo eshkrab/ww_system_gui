@@ -72,13 +72,15 @@ class MediaApiService extends ApiService {
     }
   }
 
-  Future<void> deleteMedia(String filename) async {
+  Future<bool> deleteMedia(String filename) async {
     final response = await http.post(
       Uri.parse('${getBaseUrl()}/videos/delete'),
       body: {'filename': filename},
     );
 
-    if (response.statusCode != 200) {
+    if (response.statusCode == 200) {
+      return true;
+    } else {
       throw Exception('Failed to delete media');
     }
   }
@@ -99,25 +101,16 @@ class PlaylistApiService extends ApiService {
     }
   }
 
-  // Future<List<String>> fetchPlaylist() async {
-  //   final response = await http.get(Uri.parse('${getBaseUrl()}/playlist'));
-  //
-  //   if (response.statusCode == 200) {
-  //     final playlistData = jsonDecode(response.body);
-  //     return List<String>.from(playlistData['playlist']);
-  //   } else {
-  //     throw Exception('Failed to load playlist');
-  //   }
-  // }
-
-  Future<void> savePlaylist(List<String> playlist, String mode) async {
+  Future<bool> savePlaylist(List<String> playlist, String mode) async {
     final response = await http.post(
       Uri.parse('${getBaseUrl()}/playlist'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'playlist': playlist, 'mode': mode}),
     );
 
-    if (response.statusCode != 200) {
+    if (response.statusCode == 200) {
+      return true;
+    } else {
       throw Exception('Failed to save playlist');
     }
   }
@@ -140,12 +133,11 @@ class PlaylistApiService extends ApiService {
       body: {'mode': value},
     );
 
-    if (response.statusCode != 200) {
-      print(response.statusCode);
+    if (response.statusCode == 200) {
+      return true;
+    } else {
       return false;
-      // throw Exception('Failed to send mode');
     }
-    return true;
   }
 }
 
@@ -172,12 +164,11 @@ class PlayerApiService extends ApiService {
       body: {'state': value},
     );
 
-    if (response.statusCode != 200) {
-      print(response.statusCode);
+    if (response.statusCode == 200) {
+      return true;
+    } else {
       return false;
-      // throw Exception('Failed to set state');
     }
-    return true;
   }
 
   Future<String> getMode() async {
@@ -198,12 +189,11 @@ class PlayerApiService extends ApiService {
       body: {'mode': value},
     );
 
-    if (response.statusCode != 200) {
-      print(response.statusCode);
+    if (response.statusCode == 200) {
+      return true;
+    } else {
       return false;
-      // throw Exception('Failed to send mode');
     }
-    return true;
   }
 
   // Methods for getting and setting brightness or other settings
@@ -219,6 +209,10 @@ class PlayerApiService extends ApiService {
   }
 
   Future<bool> setBrightness(double brightness) async {
+    if (brightness < 0.0 || brightness > 1.0) {
+      throw Exception('Brightness value should be between 0.0 and 1.0');
+    }
+
     String brightnessUrl = '${getBaseUrl()}/brightness';
     final response = await http.post(
       Uri.parse(brightnessUrl),
@@ -227,14 +221,14 @@ class PlayerApiService extends ApiService {
       }, // brightness in range 0.0 to 1.0
     );
 
-    if (response.statusCode != 200) {
+    if (response.statusCode == 200) {
+      return true;
+    } else {
       return false;
-      // throw Exception('Failed to update brightness');
     }
-    return true;
   }
 
-  //api calls for setting and getting FPS
+  // API calls for setting and getting FPS
   Future<double> getFPS() async {
     String fpsUrl = '${getBaseUrl()}/fps';
     final response = await http.get(Uri.parse(fpsUrl));
@@ -247,17 +241,21 @@ class PlayerApiService extends ApiService {
   }
 
   Future<bool> setFPS(double fps) async {
+    if (fps < 1.0 || fps > 150.0) {
+      throw Exception('FPS value should be between 1 and 150');
+    }
+
     String fpsUrl = '${getBaseUrl()}/fps';
     final response = await http.post(
       Uri.parse(fpsUrl),
-      body: {'fps': (fps).toStringAsFixed(2)}, // fps in range 0.0 to 1.0
+      body: {'fps': fps.toStringAsFixed(2)}, // fps in range 1 to 150
     );
 
-    if (response.statusCode != 200) {
+    if (response.statusCode == 200) {
+      return true;
+    } else {
       return false;
-      // throw Exception('Failed to update fps');
     }
-    return true;
   }
 }
 

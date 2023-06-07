@@ -5,12 +5,24 @@ import '../services/api_service.dart';
 
 class MediaFileProvider extends ChangeNotifier {
   List<MediaFile> _mediaFiles = [];
-  final MediaApiService _apiService;
+  MediaApiService _apiService;
+  AppSettings appSettings;
 
-  MediaFileProvider({required AppSettings appSettings})
+  MediaFileProvider({required this.appSettings})
       : _apiService = MediaApiService(appSettings: appSettings);
 
+  // MediaFileProvider({required AppSettings appSettings})
+  //     : _apiService = MediaApiService(appSettings: appSettings);
+
   List<MediaFile> get mediaFiles => _mediaFiles;
+
+  void updateAppSettings(AppSettings _appSettings) {
+    appSettings = _appSettings;
+    _apiService = MediaApiService(
+        appSettings:
+            appSettings); // Create new instance of API Service with updated settings
+    notifyListeners();
+  }
 
   Future<void> fetchMediaFiles() async {
     try {
@@ -24,7 +36,7 @@ class MediaFileProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> uploadMedia() async {
+  Future<bool> uploadMedia() async {
     try {
       bool success = await _apiService.uploadMedia();
       if (success) {
@@ -32,17 +44,25 @@ class MediaFileProvider extends ChangeNotifier {
       } else {
         print('Failed to upload media file');
       }
+      return success;
     } catch (e) {
       print('Error in uploading media: $e');
+      return false;
     }
   }
 
-  Future<void> deleteMedia(String filename) async {
+  Future<bool> deleteMedia(String filename) async {
     try {
-      await _apiService.deleteMedia(filename);
-      fetchMediaFiles(); // refresh media files after successful deletion
+      bool success = await _apiService.deleteMedia(filename);
+      if (success) {
+        fetchMediaFiles(); // refresh media files after successful deletion
+      } else {
+        print('Failed to delete media file');
+      }
+      return success;
     } catch (e) {
-      print('Failed to delete media file: $e');
+      print('Error in deleting media: $e');
+      return false;
     }
   }
 }

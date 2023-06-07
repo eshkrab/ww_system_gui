@@ -1,49 +1,54 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../view_models/player_view_model.dart';
+import '../../providers/player_provider.dart';
+import '../../providers/playlist_provider.dart';
 
 class PlayerControlWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final playerViewModel =
-        Provider.of<PlayerViewModel>(context, listen: false);
+    final playerProvider = Provider.of<PlayerProvider>(context);
+    final playlistProvider = Provider.of<PlaylistProvider>(context);
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: <Widget>[
         IconButton(
           icon: Icon(Icons.skip_previous),
-          onPressed: () => playerViewModel.previous(),
+          onPressed: () => playerProvider.previous(),
         ),
         IconButton(
           icon: Icon(Icons.play_arrow),
-          onPressed: () => playerViewModel.play(),
+          onPressed: () => playerProvider.play(),
         ),
         IconButton(
           icon: Icon(Icons.stop),
-          onPressed: () => playerViewModel.stop(),
+          onPressed: () => playerProvider.stop(),
         ),
         IconButton(
           icon: Icon(Icons.skip_next),
-          onPressed: () => playerViewModel.next(),
+          onPressed: () => playerProvider.next(),
         ),
         IconButton(
-          icon: _getPlayerModeIcon(playerViewModel.playerMode),
-          onPressed: () => playerViewModel.togglePlayerMode(),
+          icon: _getPlayerModeIcon(context, playlistProvider.playlist.mode),
+          onPressed: () => playlistProvider.toggleMode(),
         ),
       ],
     );
   }
 
-  Icon _getPlayerModeIcon(String playerMode) {
+  Icon _getPlayerModeIcon(BuildContext context, String playerMode) {
     switch (playerMode) {
       case 'repeat':
+        //return repeat icon in theme's accent color
         return Icon(Icons.repeat, color: Colors.green);
+      // return Icon(Icons.repeat, color: Theme.of(context).accentColor);
       case 'repeat_one':
         return Icon(Icons.repeat_one, color: Colors.green);
-      case 'halt':
+      // return Icon(Icons.repeat_one, color: Theme.of(context).accentColor);
+      // case 'repeat_none':
       default:
-        return Icon(Icons.repeat, color: Colors.grey);
+        return Icon(Icons.stop, color: Colors.grey);
+      // return Icon(Icons.repeat, color: Theme.of(context).accentColor);
     }
   }
 }

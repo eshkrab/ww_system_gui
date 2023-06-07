@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:trophy_gui/view_models/player_view_model.dart';
-import 'package:trophy_gui/views/widgets/player_control_widget.dart';
+import '../widgets/player_control_widget.dart';
+import '../../providers/player_provider.dart';
 
 class PlayerPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // return ChangeNotifierProvider(
-    //   create: (context) => PlayerViewModel(),
+    final playerProvider = Provider.of<PlayerProvider>(context, listen: false);
+    playerProvider.fetchPlayerState();
+    playerProvider.fetchPlayerBrightness();
+    playerProvider.fetchPlayerFPS();
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Player'),
       ),
-      body: Consumer<PlayerViewModel>(
+      body: Consumer<PlayerProvider>(
         builder: (context, model, child) => Column(
           children: <Widget>[
             PlayerControlWidget(),
@@ -20,7 +23,6 @@ class PlayerPage extends StatelessWidget {
           ],
         ),
       ),
-      // ),
     );
   }
 }

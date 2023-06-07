@@ -1,84 +1,111 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_reorderable_list/flutter_reorderable_list.dart';
 import 'package:provider/provider.dart';
-import '../../view_models/player_view_model.dart';
+import '../../providers/playlist_provider.dart';
+import '../../providers/media_provider.dart'; //
+import '../../models/media.dart';
 
-class PlaylistWidget extends StatelessWidget {
+class PlaylistWidget extends StatefulWidget {
+  @override
+  _PlaylistWidgetState createState() => _PlaylistWidgetState();
+}
+
+class _PlaylistWidgetState extends State<PlaylistWidget> {
+  bool _editing = false;
+
+  void _toggleEditing() {
+    setState(() {
+      _editing = !_editing;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final playerViewModel =
-        Provider.of<PlayerViewModel>(context, listen: false);
+    var playlistProvider = Provider.of<PlaylistProvider>(context);
+    var mediaFileProvider = Provider.of<MediaFileProvider>(context); // add this
 
-    return Consumer<PlayerViewModel>(
-      builder: (context, model, child) => Column(
-        children: [
-          ElevatedButton(
-            onPressed: () {
-              model.toggleEditMode();
-            },
-            child: Text(model.isEditMode ? 'Save Changes' : 'Edit Playlist'),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        const SizedBox(height: 20),
+        const Text(
+          'Playlist',
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 10),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 40),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              // ... other UI elements ...
+              if (_editing)
+                DropdownButton<MediaFile>(
+                  hint: Text("Select Media"),
+                  onChanged: (MediaFile? mediaFile) {
+                    if (mediaFile != null) {
+                      playlistProvider.addItem(mediaFile);
+                    }
+                  },
+                  items:
+                      mediaFileProvider.mediaFiles.map((MediaFile mediaFile) {
+                    return DropdownMenuItem<MediaFile>(
+                      value: mediaFile,
+                      child: Text(mediaFile.name),
+                    );
+                  }).toList(),
+                ),
+              TextButton(
+                onPressed: _toggleEditing,
+                child: Text(_editing ? 'Cancel' : 'Edit'),
+              ),
+              if (_editing)
+                TextButton(
+                  onPressed: () async {
+                    await playlistProvider.savePlaylist(
+                        playlistProvider.playlist.playlist,
+                        playlistProvider.playlist.mode);
+                  },
+                  child: Text('Save'),
+                ),
+            ],
           ),
-          Expanded(
-            child: ReorderableList(
-              onReorder: model.isEditMode ? model.movePlaylistItem : null,
-              child: ListView.builder(
-                itemCount: model.player.playlist.length,
-                itemBuilder: (context, index) {
-                  return ReorderableItem(
-                    key: Key(model.player.playlist[index].filename),
-                    childBuilder:
-                        (BuildContext context, ReorderableItemState state) {
+        ),
+        SizedBox(height: 10),
+        Expanded(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 40),
+            child: _editing
+                ? ReorderableListView.builder(
+                    itemCount: playlistProvider.playlist.playlist.length,
+                    onReorder: (int oldIndex, int newIndex) {
+                      playlistProvider.reorderItems(oldIndex, newIndex);
+                    },
+                    itemBuilder: (BuildContext context, int index) {
+                      final item =
+                          playlistProvider.playlist.playlist[index].name;
                       return ListTile(
-                        tileColor: index % 2 == 0
-                            ? Theme.of(context).colorScheme.surface
-                            : Theme.of(context).colorScheme.primaryVariant,
-                        title: Text(model.player.playlist[index].filename),
-                        trailing: model.isEditMode
-                            ? IconButton(
-                                icon: Icon(Icons.delete),
-                                onPressed: () {
-                                  model.deletePlaylistItem(index);
-                                },
-                              )
-                            : null,
+                        key: Key('$item-$index'),
+                        title: Text(item),
+                        trailing: IconButton(
+                          icon: Icon(Icons.delete),
+                          onPressed: () => playlistProvider.deleteItem(index),
+                        ),
                       );
                     },
-                  );
-                },
-              ),
-            ),
+                  )
+                : ListView.builder(
+                    itemCount: playlistProvider.playlist.playlist.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final item =
+                          playlistProvider.playlist.playlist[index].name;
+                      return ListTile(
+                        title: Text(item),
+                      );
+                    },
+                  ),
           ),
-          model.isEditMode
-              ? DraggableScrollableSheet(
-                  initialChildSize: 0.4,
-                  minChildSize: 0.1,
-                  maxChildSize: 0.6,
-                  builder: (BuildContext context,
-                      ScrollController scrollController) {
-                    return Container(
-                      color: Colors.blue[100],
-                      child: ListView.builder(
-                        controller: scrollController,
-                        itemCount: model.mediaItems.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return ListTile(
-                            title: Text(model.mediaItems[index].filename),
-                            trailing: IconButton(
-                              icon: Icon(Icons.add),
-                              onPressed: () {
-                                model.addMediaItemToPlaylist(index);
-                              },
-                            ),
-                          );
-                        },
-                      ),
-                    );
-                  },
-                )
-              : Container(),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
-

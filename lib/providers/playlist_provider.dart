@@ -6,14 +6,24 @@ import '../services/api_service.dart';
 
 class PlaylistProvider extends ChangeNotifier {
   Playlist _playlist;
-  final PlaylistApiService _apiService;
+  AppSettings appSettings;
+  PlaylistApiService _apiService;
 
   PlaylistProvider(
       {required AppSettings appSettings, required Playlist playlist})
-      : _apiService = PlaylistApiService(appSettings: appSettings),
+      : appSettings = appSettings,
+        _apiService = PlaylistApiService(appSettings: appSettings),
         _playlist = playlist;
 
   Playlist get playlist => _playlist;
+
+  void updateAppSettings(AppSettings _appSettings) {
+    appSettings = appSettings;
+    _apiService = PlaylistApiService(
+        appSettings:
+            appSettings); // Create new instance of API Service with updated settings
+    notifyListeners();
+  }
 
   Future<void> fetchPlaylist() async {
     try {
@@ -39,5 +49,45 @@ class PlaylistProvider extends ChangeNotifier {
     } catch (e) {
       print('Failed to save playlist: $e');
     }
+  }
+
+  void toggleMode() {
+    String currentMode = _playlist.mode;
+    String newMode;
+
+    switch (currentMode) {
+      case 'repeat':
+        newMode = 'repeat_one';
+        break;
+      case 'repeat_one':
+        newMode = 'repeat_none';
+        break;
+      case 'repeat_none':
+      default:
+        newMode = 'repeat';
+        break;
+    }
+
+    _playlist = _playlist.copyWith(mode: newMode);
+    savePlaylist(_playlist.playlist, newMode);
+  }
+
+  void addItem(MediaFile file) {
+    _playlist.playlist.add(file);
+    notifyListeners();
+  }
+
+  void deleteItem(int index) {
+    _playlist.playlist.removeAt(index);
+    notifyListeners();
+  }
+
+  void reorderItems(int oldIndex, int newIndex) {
+    if (oldIndex < newIndex) {
+      newIndex -= 1;
+    }
+    final MediaFile item = _playlist.playlist.removeAt(oldIndex);
+    _playlist.playlist.insert(newIndex, item);
+    notifyListeners();
   }
 }

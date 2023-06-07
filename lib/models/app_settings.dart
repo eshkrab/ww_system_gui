@@ -1,6 +1,3 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
-
 class AppSettings {
   bool _isDarkModeEnabled = true;
   String _serverIP = '192.168.86.144';
