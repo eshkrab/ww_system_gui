@@ -35,9 +35,9 @@ class PlayerProvider extends ChangeNotifier {
     try {
       bool success = await _apiService.setState(state);
       if (success) {
-        _player = _player.copyWith(state: state);
+        // _player = _player.copyWith(state: state);
         await fetchPlayerState(); // Query the API endpoint for player state
-        notifyListeners();
+        // notifyListeners();
         return true;
       } else {
         print('Failed to set player state');
@@ -47,6 +47,10 @@ class PlayerProvider extends ChangeNotifier {
       print('Failed to set player state: $e');
       return false;
     }
+  }
+
+  String getState() {
+    return _player.state;
   }
 
   Future<bool> stop() async {

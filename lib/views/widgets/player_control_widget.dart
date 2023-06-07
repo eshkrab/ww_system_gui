@@ -16,10 +16,11 @@ class PlayerControlWidget extends StatelessWidget {
           icon: Icon(Icons.skip_previous),
           onPressed: () => playerProvider.previous(),
         ),
-        IconButton(
-          icon: Icon(Icons.play_arrow),
-          onPressed: () => playerProvider.play(),
-        ),
+        _getPlayPauseIcon(playerProvider, playerProvider.getState()),
+        // IconButton(
+        //   icon: Icon(Icons.play_arrow),
+        //   onPressed: () => playerProvider.play(),
+        // ),
         IconButton(
           icon: Icon(Icons.stop),
           onPressed: () => playerProvider.stop(),
@@ -34,6 +35,30 @@ class PlayerControlWidget extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  IconButton _getPlayPauseIcon(
+      PlayerProvider playerProvider, String playerState) {
+    switch (playerState) {
+      case 'playing':
+        return IconButton(
+          icon: Icon(Icons.pause),
+          onPressed: () => playerProvider.pause(),
+        );
+      // return Icon(Icons.pause, color: Theme.of(context).accentColor);
+      case 'paused':
+        return IconButton(
+          icon: Icon(Icons.play_arrow),
+          onPressed: () => playerProvider.play(),
+        );
+      // return Icon(Icons.play_arrow, color: Theme.of(context).accentColor);
+      default:
+        return IconButton(
+          icon: Icon(Icons.play_arrow),
+          onPressed: () => playerProvider.play(),
+        );
+      // return Icon(Icons.stop, color: Theme.of(context).accentColor);
+    }
   }
 
   Icon _getPlayerModeIcon(BuildContext context, String playerMode) {
