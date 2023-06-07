@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:http/http.dart' as http;
 import '../models/app_settings.dart';
+import '../models/media.dart';
 
 class ApiService {
   final AppSettings _appSettings;
@@ -19,22 +20,31 @@ class MediaApiService extends ApiService {
   MediaApiService({required AppSettings appSettings}) : super(appSettings);
 
   // Methods for uploading and deleting media files
-  Future<List<String>> fetchMediaDirectory() async {
-    final response = await http.get(Uri.parse('${getBaseUrl()}/state'));
+  Future<List<MediaFile>> fetchMediaDirectory() async {
+    final response = await http.get(Uri.parse('${getBaseUrl()}/videos'));
 
     if (response.statusCode == 200) {
-      return List<String>.from(jsonDecode(response.body)['videos']);
+      final jsonData = jsonDecode(response.body);
+      final List<dynamic> mediaJsonList = jsonData['mediaFiles'];
+      final List<MediaFile> mediaFiles =
+          mediaJsonList.map((json) => MediaFile.fromJson(json)).toList();
+      return mediaFiles;
     } else {
       throw Exception('Failed to load media directory');
     }
   }
 
-  Future<bool> uploadMedia() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['mp4', 'avi', 'mov'],
-    );
+  // Future<List<String>> fetchMediaDirectory() async {
+  //   final response = await http.get(Uri.parse('${getBaseUrl()}/state'));
+  //
+  //   if (response.statusCode == 200) {
+  //     return List<String>.from(jsonDecode(response.body)['videos']);
+  //   } else {
+  //     throw Exception('Failed to load media directory');
+  //   }
+  // }
 
+  Future<bool> uploadMedia(FilePickerResult? result) async {
     if (result != null) {
       Uint8List fileBytes = result.files.single.bytes!;
       String fileName = result.files.single.name;
@@ -51,7 +61,7 @@ class MediaApiService extends ApiService {
 
       try {
         var response = await dio.post(
-          '${getBaseUrl()}/videos/upload',
+          '${getBaseUrl()}/videos',
           data: formData,
         );
         if (response.statusCode == 200 && response.data['success'] == true) {

@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AppSettings appSettings = AppSettings(
-        isDarkModeEnabled: true, serverIP: '192.168.86.144', serverPort: 8080);
+        isDarkModeEnabled: true, serverIP: '192.168.86.147', serverPort: 8000);
 
     final playerProvider = PlayerProvider(
         appSettings: appSettings,
@@ -75,12 +75,12 @@ class MyHomePage extends StatelessWidget {
           appBar: AppBar(
             title: Text(title),
             actions: [
-              Switch(
-                value: appSettingsProvider.appSettings.isDarkModeEnabled,
-                onChanged: (value) {
-                  appSettingsProvider.toggleDarkMode();
-                },
-              ),
+              // Switch(
+              //   value: appSettingsProvider.appSettings.isDarkModeEnabled,
+              //   onChanged: (value) {
+              //     appSettingsProvider.toggleDarkMode();
+              //   },
+              // ),
             ],
           ),
           body: IndexedStack(

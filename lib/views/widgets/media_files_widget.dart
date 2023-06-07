@@ -35,7 +35,7 @@ class MediaFilesWidget extends StatelessWidget {
                   },
                 );
 
-                await mediaFileProvider.uploadMedia();
+                await mediaFileProvider.uploadMedia(result);
 
                 Navigator.pop(context); // Close loading dialog
 

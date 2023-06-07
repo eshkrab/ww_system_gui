@@ -9,15 +9,10 @@ class SettingsWidget extends StatefulWidget {
 
 class _SettingsWidgetState extends State<SettingsWidget> {
   final _formKey = GlobalKey<FormState>();
-  late TextEditingController _ipController;
-  late TextEditingController _portController;
 
   @override
   void initState() {
     super.initState();
-
-    _ipController = TextEditingController();
-    _portController = TextEditingController();
   }
 
   bool _isValidIP(String? ip) {
@@ -29,16 +24,13 @@ class _SettingsWidgetState extends State<SettingsWidget> {
   }
 
   bool _isValidPort(int? port) {
-    return port != null && port > 0 && port < 65536;
+    return port != null && port >= 0 && port < 65536; // Allowing 0 as port
   }
 
   @override
   Widget build(BuildContext context) {
     var appSettingsProvider = Provider.of<AppSettingsProvider>(context);
     var appSettings = appSettingsProvider.appSettings;
-
-    _ipController.text = appSettings.serverIP;
-    _portController.text = appSettings.serverPort.toString();
 
     return Form(
       key: _formKey,
@@ -52,7 +44,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
           ),
           const SizedBox(height: 20),
           TextFormField(
-            controller: _ipController,
+            initialValue: appSettings.serverIP,
             decoration: const InputDecoration(labelText: 'Server IP'),
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -68,7 +60,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
             },
           ),
           TextFormField(
-            controller: _portController,
+            initialValue: appSettings.serverPort.toString(),
             decoration: const InputDecoration(labelText: 'Server Port'),
             validator: (value) {
               int? port = int.tryParse(value ?? '');
@@ -76,7 +68,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                 return 'Please enter the server port';
               }
               if (!_isValidPort(port)) {
-                return 'Please enter a valid port number (1-65535)';
+                return 'Please enter a valid port number (0-65535)';
               }
               return null;
             },
@@ -104,12 +96,5 @@ class _SettingsWidgetState extends State<SettingsWidget> {
         ],
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _ipController.dispose();
-    _portController.dispose();
-    super.dispose();
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:file_picker/file_picker.dart';
 import '../models/media.dart';
 import '../models/app_settings.dart';
 import '../services/api_service.dart';
@@ -26,19 +27,29 @@ class MediaFileProvider extends ChangeNotifier {
 
   Future<void> fetchMediaFiles() async {
     try {
-      List<String> mediaNames = await _apiService.fetchMediaDirectory();
-      _mediaFiles = mediaNames
-          .map((name) => MediaFile(name: name, filepath: ''))
-          .toList();
+      List<MediaFile> mediaFiles = await _apiService.fetchMediaDirectory();
+      _mediaFiles = mediaFiles;
       notifyListeners();
     } catch (e) {
       print('Failed to fetch media files: $e');
     }
   }
 
-  Future<bool> uploadMedia() async {
+  // Future<void> fetchMediaFiles() async {
+  //   try {
+  //     List<String> mediaNames = await _apiService.fetchMediaDirectory();
+  //     _mediaFiles = mediaNames
+  //         .map((name) => MediaFile(name: name, filepath: ''))
+  //         .toList();
+  //     notifyListeners();
+  //   } catch (e) {
+  //     print('Failed to fetch media files: $e');
+  //   }
+  // }
+
+  Future<bool> uploadMedia(FilePickerResult? result) async {
     try {
-      bool success = await _apiService.uploadMedia();
+      bool success = await _apiService.uploadMedia(result);
       if (success) {
         fetchMediaFiles(); // refresh media files after successful upload
       } else {
