@@ -83,8 +83,8 @@ class MediaApiService extends ApiService {
   }
 
   Future<bool> deleteMedia(String filename) async {
-    final response = await http.post(
-      Uri.parse('${getBaseUrl()}/videos/delete'),
+    final response = await http.delete(
+      Uri.parse('${getBaseUrl()}/videos'),
       body: {'filename': filename},
     );
 
