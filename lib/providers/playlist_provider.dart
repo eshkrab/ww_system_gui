@@ -9,19 +9,18 @@ class PlaylistProvider extends ChangeNotifier {
   AppSettings appSettings;
   PlaylistApiService _apiService;
 
-  PlaylistProvider(
-      {required AppSettings appSettings, required Playlist playlist})
-      : appSettings = appSettings,
+  PlaylistProvider({
+    required AppSettings appSettings,
+    required Playlist playlist,
+  })  : appSettings = appSettings,
         _apiService = PlaylistApiService(appSettings: appSettings),
         _playlist = playlist;
 
   Playlist get playlist => _playlist;
 
   void updateAppSettings(AppSettings _appSettings) {
-    appSettings = appSettings;
-    _apiService = PlaylistApiService(
-        appSettings:
-            appSettings); // Create new instance of API Service with updated settings
+    appSettings = _appSettings;
+    _apiService = PlaylistApiService(appSettings: appSettings);
     notifyListeners();
   }
 
@@ -34,11 +33,9 @@ class PlaylistProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> savePlaylist(List<MediaFile> playlist, String mode) async {
+  Future<void> savePlaylist() async {
     try {
-      await _apiService.savePlaylist(
-          playlist.map((mediaFile) => mediaFile.name).toList(), mode);
-      _playlist = Playlist(playlist: playlist, mode: mode);
+      await _apiService.savePlaylist(_playlist);
       notifyListeners();
     } catch (e) {
       print('Failed to save playlist: $e');
@@ -63,7 +60,7 @@ class PlaylistProvider extends ChangeNotifier {
     }
 
     _playlist = _playlist.copyWith(mode: newMode);
-    savePlaylist(_playlist.playlist, newMode);
+    savePlaylist();
   }
 
   void addItem(MediaFile file) {

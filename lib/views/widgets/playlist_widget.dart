@@ -77,9 +77,7 @@ class _PlaylistWidgetState extends State<PlaylistWidget> {
                     if (_editing)
                       TextButton(
                         onPressed: () async {
-                          await playlistProvider.savePlaylist(
-                              playlistProvider.playlist.playlist,
-                              playlistProvider.playlist.mode);
+                          await playlistProvider.savePlaylist();
                           _toggleEditing();
                         },
                         child: Text('Save'),

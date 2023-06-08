@@ -112,11 +112,11 @@ class PlaylistApiService extends ApiService {
     }
   }
 
-  Future<bool> savePlaylist(List<String> playlist, String mode) async {
+  Future<bool> savePlaylist(Playlist playlist) async {
     final response = await http.post(
       Uri.parse('${getBaseUrl()}/playlist'),
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'playlist': playlist, 'mode': mode}),
+      body: jsonEncode(playlist.toJson()),
     );
 
     if (response.statusCode == 200) {
