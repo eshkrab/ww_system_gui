@@ -56,7 +56,7 @@ class _PlaylistWidgetState extends State<PlaylistWidget> {
                     // ... other UI elements ...
                     if (_editing)
                       DropdownButton<MediaFile>(
-                        hint: Text("Add Media"),
+                        hint: Text("Select Media"),
                         onChanged: (MediaFile? mediaFile) {
                           if (mediaFile != null) {
                             playlistProvider.addItem(mediaFile);
@@ -103,6 +103,15 @@ class _PlaylistWidgetState extends State<PlaylistWidget> {
                             return ListTile(
                               key: Key('$item-$index'),
                               title: Text(item),
+                              tileColor: index % 2 == 0
+                                  ? Theme.of(context)
+                                      .colorScheme
+                                      .surface
+                                      .withOpacity(0.5)
+                                  : Theme.of(context)
+                                      .colorScheme
+                                      .surface
+                                      .withOpacity(0.1),
                               trailing: IconButton(
                                 icon: Icon(Icons.delete),
                                 onPressed: () =>
@@ -117,6 +126,7 @@ class _PlaylistWidgetState extends State<PlaylistWidget> {
                             final item =
                                 playlistProvider.playlist.playlist[index].name;
                             return ListTile(
+                              title: Text(item),
                               tileColor: index % 2 == 0
                                   ? Theme.of(context)
                                       .colorScheme
@@ -126,7 +136,6 @@ class _PlaylistWidgetState extends State<PlaylistWidget> {
                                       .colorScheme
                                       .surface
                                       .withOpacity(0.1),
-                              title: Text(item),
                             );
                           },
                         ),
