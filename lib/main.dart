@@ -72,17 +72,6 @@ class MyHomePage extends StatelessWidget {
     return Consumer2<AppSettingsProvider, NavigationProvider>(
       builder: (context, appSettingsProvider, navProvider, _) {
         return Scaffold(
-          appBar: AppBar(
-            title: Text(title),
-            actions: [
-              // Switch(
-              //   value: appSettingsProvider.appSettings.isDarkModeEnabled,
-              //   onChanged: (value) {
-              //     appSettingsProvider.toggleDarkMode();
-              //   },
-              // ),
-            ],
-          ),
           body: IndexedStack(
             index: navProvider.selectedIndex,
             children: [

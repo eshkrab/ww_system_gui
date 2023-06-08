@@ -8,6 +8,10 @@ import '../../providers/player_provider.dart';
 class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final playerProvider = Provider.of<PlayerProvider>(context);
+    playerProvider.fetchPlayerBrightness();
+    playerProvider.fetchPlayerFPS();
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Settings'),

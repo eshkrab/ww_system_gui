@@ -76,4 +76,22 @@ class MediaFileProvider extends ChangeNotifier {
       return false;
     }
   }
+
+  Future<bool> deleteAllMedia() async {
+    try {
+      for (var mediaFile in _mediaFiles) {
+        bool success = await _apiService.deleteMedia(mediaFile.name);
+        if (!success) {
+          print('Failed to delete media file: ${mediaFile.name}');
+          return false;
+        }
+      }
+      _mediaFiles = []; // clear the media files list
+      notifyListeners();
+      return true;
+    } catch (e) {
+      print('Error in deleting all media files: $e');
+      return false;
+    }
+  }
 }

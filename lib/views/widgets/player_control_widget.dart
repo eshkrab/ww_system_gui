@@ -6,8 +6,9 @@ import '../../providers/playlist_provider.dart';
 class PlayerControlWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final playerProvider = Provider.of<PlayerProvider>(context);
-    final playlistProvider = Provider.of<PlaylistProvider>(context);
+    final playerProvider = Provider.of<PlayerProvider>(context, listen: false);
+    final playlistProvider =
+        Provider.of<PlaylistProvider>(context, listen: false);
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,

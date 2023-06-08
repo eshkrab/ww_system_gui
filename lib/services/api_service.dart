@@ -5,6 +5,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:http/http.dart' as http;
 import '../models/app_settings.dart';
 import '../models/media.dart';
+import '../models/playlist.dart';
 
 class ApiService {
   final AppSettings _appSettings;
@@ -65,7 +66,7 @@ class MediaApiService extends ApiService {
           data: formData,
         );
         if (response.statusCode == 200 && response.data['success'] == true) {
-          print('Media uploaded successfully');
+          print('Media uploaded successfully!!');
           // Refetch the media directory after uploading the media
           return true;
         } else {
@@ -100,12 +101,12 @@ class PlaylistApiService extends ApiService {
   PlaylistApiService({required AppSettings appSettings}) : super(appSettings);
 
   // Methods for getting and changing the playlist
-  Future<List<String>> fetchPlaylist() async {
+  Future<Playlist> fetchPlaylist() async {
     final response = await http.get(Uri.parse('${getBaseUrl()}/playlist'));
 
     if (response.statusCode == 200) {
-      final playlistData = jsonDecode(response.body) as Map<String, dynamic>;
-      return (playlistData['playlist'] as List).cast<String>();
+      final jsonData = jsonDecode(response.body);
+      return Playlist.fromJson(jsonData);
     } else {
       throw Exception('Failed to load playlist');
     }
@@ -160,7 +161,7 @@ class PlayerApiService extends ApiService {
     final response = await http.get(Uri.parse(stateUrl));
 
     if (response.statusCode == 200) {
-      print(jsonDecode(response.body)['state']);
+      // print(jsonDecode(response.body)['state']);
       return jsonDecode(response.body)['state'];
     } else {
       throw Exception('Failed to fetch state');
@@ -246,7 +247,9 @@ class PlayerApiService extends ApiService {
     if (response.statusCode == 200) {
       return jsonDecode(response.body)['fps'].toDouble();
     } else {
-      throw Exception('Failed to fetch fps');
+      //show response body and code in Exception
+      throw Exception(
+          'Failed to fetch fps ${response.body} ${response.statusCode}');
     }
   }
 

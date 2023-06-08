@@ -29,7 +29,8 @@ class _SettingsWidgetState extends State<SettingsWidget> {
 
   @override
   Widget build(BuildContext context) {
-    var appSettingsProvider = Provider.of<AppSettingsProvider>(context);
+    var appSettingsProvider =
+        Provider.of<AppSettingsProvider>(context, listen: false);
     var appSettings = appSettingsProvider.appSettings;
 
     return Form(
@@ -39,7 +40,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
         children: <Widget>[
           const SizedBox(height: 20),
           const Text(
-            'Settings',
+            'App Settings',
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 20),

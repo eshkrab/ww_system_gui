@@ -27,13 +27,7 @@ class PlaylistProvider extends ChangeNotifier {
 
   Future<void> fetchPlaylist() async {
     try {
-      final List<String> playlistNames = await _apiService.fetchPlaylist();
-      _playlist = Playlist(
-        playlist: playlistNames
-            .map((name) => MediaFile(name: name, filepath: ''))
-            .toList(),
-        mode: _playlist.mode,
-      );
+      _playlist = await _apiService.fetchPlaylist();
       notifyListeners();
     } catch (e) {
       print('Failed to fetch playlist: $e');
