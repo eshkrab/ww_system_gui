@@ -1,20 +1,21 @@
 import 'package:flutter/foundation.dart';
+import 'dart:convert';
 import '../models/player.dart';
+import '../models/playlist.dart';
+import '../models/media.dart';
 import '../models/app_settings.dart';
 import '../services/api_service.dart';
 
 class PlayerProvider extends ChangeNotifier {
   late Player _player;
   PlayerApiService _apiService;
+  PlaylistApiService _playlistApiService;
   AppSettings appSettings;
 
   PlayerProvider({required this.appSettings, required Player player})
       : _apiService = PlayerApiService(appSettings: appSettings),
+        _playlistApiService = PlaylistApiService(appSettings: appSettings),
         _player = player;
-
-  // PlayerProvider({required AppSettings appSettings, required Player player})
-  //     : _apiService = PlayerApiService(appSettings: appSettings),
-  //       _player = player;
 
   Player get player => _player;
 
@@ -146,6 +147,56 @@ class PlayerProvider extends ChangeNotifier {
     } catch (e) {
       print('Failed to set player FPS: $e');
       return false;
+    }
+  }
+
+  Future<bool> fetchCurrentMediaFile() async {
+    try {
+      // final String currentMediaFileString =
+      //     await _apiService.getCurrentMediaFile();
+      //
+      // final MediaFile currentMediaFile = MediaFile(
+      //     name: currentMediaFileString, filepath: currentMe
+      // print('Current media file string: $currentMediaFileString');
+
+      //get media file by using media file from json and api call getcurrentmediafile
+      final String currentMediaFileString =
+          await _apiService.getCurrentMediaFile();
+      print('Current media file string: $currentMediaFileString');
+      Map<String, dynamic> json = jsonDecode(currentMediaFileString);
+
+      final MediaFile mediafile =
+          MediaFile.fromJson(json); //get media file from json
+
+      //search through the playlist and find the current media file by name
+      final Playlist playlist = await _playlistApiService.fetchPlaylist();
+      final MediaFile currentMediaFile = playlist.playlist.firstWhere(
+          (mediaFile) => mediaFile.name == currentMediaFileString,
+          orElse: () => MediaFile(name: 'none', filepath: 'none'));
+
+      print('Current media file: ${currentMediaFile.name}');
+      // final MediaFile currentMediaFile =
+      //     await _apiService.getCurrentMediaFile();
+      _player = _player.copyWith(currentMediaFile: currentMediaFile);
+      notifyListeners();
+      return true;
+    } catch (e) {
+      print('Failed to fetch current media file: $e');
+      return false;
+    }
+  }
+
+  //fetch thumbnail url for current media file
+  Future<String> fetchCurrentMediaFileThumbnailUrl() async {
+    try {
+      final String currentMediaFileString =
+          await _apiService.getCurrentMediaFile();
+      final String thumbnailUrl =
+          await _apiService.getCurrentThumbnailUrl(currentMediaFileString);
+      return thumbnailUrl;
+    } catch (e) {
+      print('Failed to fetch current media file thumbnail url: $e');
+      return '';
     }
   }
 }

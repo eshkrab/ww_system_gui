@@ -1,37 +1,39 @@
+import './media.dart';
+import './playlist.dart';
+
 class Player {
   String state = '';
   double brightness = 0;
   double fps = 0;
+  MediaFile? currentMediaFile;
 
   Player({
     required this.state,
     required this.brightness,
     required this.fps,
+    this.currentMediaFile,
   });
 
   Player copyWith({
     String? state,
     double? brightness,
     double? fps,
+    MediaFile? currentMediaFile,
   }) {
     return Player(
       state: state ?? this.state,
       brightness: brightness ?? this.brightness,
       fps: fps ?? this.fps,
+      currentMediaFile: currentMediaFile ?? this.currentMediaFile,
     );
   }
 
   Player.fromJson(Map<String, dynamic> json) {
-    // if (json['playlist'] != null) {
-    //   playlist = [];
-    //   json['playlist'].forEach((v) {
-    //     playlist.add(new Media.fromJson(v));
-    //   });
-    // }
-
-    state = json['state'];
     brightness = json['brightness'];
     fps = json['fps'];
+    currentMediaFile = json['currentMediaFile'] != null
+        ? MediaFile.fromJson(json['currentMediaFile'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -39,9 +41,9 @@ class Player {
     data['state'] = state;
     data['brightness'] = brightness;
     data['fps'] = fps;
-    // if (playlist != null) {
-    //   data['playlist'] = playlist.map((v) => v.toJson()).toList();
-    // }
+    if (currentMediaFile != null) {
+      data['currentMediaFile'] = currentMediaFile!.toJson();
+    }
     return data;
   }
 }

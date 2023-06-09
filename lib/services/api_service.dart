@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../models/app_settings.dart';
 import '../models/media.dart';
@@ -182,31 +183,6 @@ class PlayerApiService extends ApiService {
     }
   }
 
-  Future<String> getMode() async {
-    String stateUrl = '${getBaseUrl()}/mode';
-    final response = await http.get(Uri.parse(stateUrl));
-
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body)['mode'];
-    } else {
-      throw Exception('Failed to fetch mode');
-    }
-  }
-
-  Future<bool> setMode(String value) async {
-    String stateUrl = '${getBaseUrl()}/mode';
-    final response = await http.post(
-      Uri.parse(stateUrl),
-      body: {'mode': value},
-    );
-
-    if (response.statusCode == 200) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
   // Methods for getting and setting brightness or other settings
   Future<double> getBrightness() async {
     String brightnessUrl = '${getBaseUrl()}/brightness';
@@ -270,6 +246,43 @@ class PlayerApiService extends ApiService {
       return false;
     }
   }
+
+  Future<String> getCurrentMediaFile() async {
+    String currentMediaUrl = '${getBaseUrl()}/currentMedia';
+    final response = await http.get(Uri.parse(currentMediaUrl));
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body)['currentMedia'];
+    } else {
+      throw Exception('Failed to fetch current media');
+    }
+  }
+
+  //get current media thumbnail
+  Future<String> getCurrentThumbnailUrl(String filename) async {
+    String currentMediaUrl = '${getBaseUrl()}/thumbnail/$filename';
+    final response = await http.get(Uri.parse(currentMediaUrl));
+
+    if (response.statusCode == 200) {
+      print('thumbnail url: $currentMediaUrl');
+      return currentMediaUrl;
+    } else {
+      throw Exception('Failed to fetch current media');
+    }
+  }
+
+  // Future<Image?> getCurrentThumbnail(String filename) async {
+  //   String currentMediaUrl = '${getBaseUrl()}/thumbnail/$filename';
+  //   final response = await http.get(Uri.parse(currentMediaUrl));
+  //
+  //   if (response.statusCode == 200) {
+  //     //get image from response
+  //     Uint8List imageData = response.bodyBytes;
+  //     return Image.memory(imageData);
+  //   } else {
+  //     throw Exception('Failed to fetch current media');
+  //   }
+  // }
 }
 
 class SettingsApiService extends ApiService {
