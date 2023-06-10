@@ -24,7 +24,8 @@
 # # EXPOSE 8000
 #
 # # Stage 2
-FROM nginx:1.21.1-alpine
+# FROM nginx:1.21.1-alpine
+FROM nginx:bullseye
 
 # Remove the default Nginx configuration file
 RUN rm /etc/nginx/conf.d/default.conf
