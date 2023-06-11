@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
     AppSettings appSettings = AppSettings(
         // isDarkModeEnabled: true, serverIP: '192.168.86.103', serverPort: 8000);
         isDarkModeEnabled: true,
-        serverIP: '127.0.0.1',
+        serverIP: '10.0.0.5',
         serverPort: 8000);
 
     final playerProvider = PlayerProvider(
