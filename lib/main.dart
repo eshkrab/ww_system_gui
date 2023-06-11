@@ -23,7 +23,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AppSettings appSettings = AppSettings(
-        isDarkModeEnabled: true, serverIP: '192.168.86.147', serverPort: 8000);
+        // isDarkModeEnabled: true, serverIP: '192.168.86.103', serverPort: 8000);
+        isDarkModeEnabled: true,
+        serverIP: '10.0.0.5',
+        serverPort: 8000);
 
     final playerProvider = PlayerProvider(
         appSettings: appSettings,
