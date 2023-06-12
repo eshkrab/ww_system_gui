@@ -4,22 +4,27 @@ import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import '../providers/settings_provider.dart';
 import '../models/app_settings.dart';
 import '../models/media.dart';
 import '../models/playlist.dart';
 
 class ApiService {
-  final AppSettings _appSettings;
+  final AppSettingsProvider _appSettingsProvider;
 
-  ApiService(this._appSettings);
+  ApiService(this._appSettingsProvider);
 
   String getBaseUrl() {
-    return 'http://${_appSettings.serverIP}:${_appSettings.serverPort}/api';
+    final settings = _appSettingsProvider.appSettings;
+    return 'http://${settings.serverIP}:${settings.serverPort}/api';
   }
 }
 
+// class MediaApiService extends ApiService {
+//   MediaApiService({required AppSettings appSettings}) : super(appSettings);
 class MediaApiService extends ApiService {
-  MediaApiService({required AppSettings appSettings}) : super(appSettings);
+  MediaApiService({required AppSettingsProvider appSettingsProvider})
+      : super(appSettingsProvider);
 
   // Methods for uploading and deleting media files
   Future<List<MediaFile>> fetchMediaDirectory() async {
@@ -98,8 +103,11 @@ class MediaApiService extends ApiService {
   }
 }
 
+// class PlaylistApiService extends ApiService {
+//   PlaylistApiService({required AppSettings appSettings}) : super(appSettings);
 class PlaylistApiService extends ApiService {
-  PlaylistApiService({required AppSettings appSettings}) : super(appSettings);
+  PlaylistApiService({required AppSettingsProvider appSettingsProvider})
+      : super(appSettingsProvider);
 
   // Methods for getting and changing the playlist
   Future<Playlist> fetchPlaylist() async {
@@ -154,7 +162,10 @@ class PlaylistApiService extends ApiService {
 }
 
 class PlayerApiService extends ApiService {
-  PlayerApiService({required AppSettings appSettings}) : super(appSettings);
+  PlayerApiService({required AppSettingsProvider appSettingsProvider})
+      : super(appSettingsProvider);
+// class PlayerApiService extends ApiService {
+//   PlayerApiService({required AppSettings appSettings}) : super(appSettings);
 
   // Methods for controlling the player
   Future<String> getState() async {

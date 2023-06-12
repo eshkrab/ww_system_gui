@@ -19,14 +19,26 @@ class PlayerProvider extends ChangeNotifier {
 
   Player get player => _player;
 
-  void updateAppSettings(AppSettings _appSettings) {
-    appSettings = _appSettings;
-    _apiService = PlayerApiService(
-        appSettings:
-            appSettings); // Create new instance of API Service with updated settings
+  void updateAppSettings(AppSettings newAppSettings) {
+    // First, save the new settings.
+    appSettings = newAppSettings;
+
+    // Then, instantiate new instances of the API services using the new settings.
+    _apiService = PlayerApiService(appSettings: appSettings);
+    _playlistApiService = PlaylistApiService(appSettings: appSettings);
+
+    // Finally, notify listeners so that the widgets can rebuild if necessary.
     notifyListeners();
   }
 
+  // void updateAppSettings(AppSettings _appSettings) {
+  //   appSettings = _appSettings;
+  //   _apiService = PlayerApiService(
+  //       appSettings:
+  //           appSettings); // Create new instance of API Service with updated settings
+  //   notifyListeners();
+  // }
+  //
   void updatePlayerState(String state) {
     _player.state = state;
     notifyListeners();

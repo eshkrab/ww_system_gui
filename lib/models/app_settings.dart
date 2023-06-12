@@ -1,4 +1,6 @@
-class AppSettings {
+import 'package:flutter/foundation.dart';
+
+class AppSettings with ChangeNotifier {
   bool _isDarkModeEnabled = true;
   String _serverIP = '192.168.86.144';
   int _serverPort = 8080;
@@ -17,17 +19,17 @@ class AppSettings {
 
   void toggleDarkMode() {
     _isDarkModeEnabled = !_isDarkModeEnabled;
-    // notifyListeners();
+    notifyListeners();
   }
 
   void updateServerIP(String ip) {
     _serverIP = ip;
-    // notifyListeners();
+    notifyListeners();
   }
 
   void updateServerPort(int port) {
     _serverPort = port;
-    // notifyListeners();
+    notifyListeners();
   }
 
   AppSettings copyWith({

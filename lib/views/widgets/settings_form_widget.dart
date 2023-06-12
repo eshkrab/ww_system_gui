@@ -30,7 +30,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
   @override
   Widget build(BuildContext context) {
     var appSettingsProvider =
-        Provider.of<AppSettingsProvider>(context, listen: false);
+        Provider.of<AppSettingsProvider>(context, listen: true);
     var appSettings = appSettingsProvider.appSettings;
 
     return Form(
