@@ -59,7 +59,7 @@ class _MediaFilesWidgetState extends State<MediaFilesWidget> {
                         onPressed: () async {
                           FilePickerResult? result =
                               await FilePicker.platform.pickFiles(
-                            type: FileType.video,
+                            type: FileType.any,
                           );
 
                           if (result != null) {
