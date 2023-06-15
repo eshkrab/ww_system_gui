@@ -55,16 +55,16 @@ class _SettingsPageState extends State<SettingsPage>
               } else if (snapshot.hasError) {
                 return Center(child: Text('An error occurred!'));
               } else {
-                return ListView(
+                return Column(
                   children: [
-                    Expanded(
+                    Flexible(
                       child: SettingsWidget(),
                       flex: 1,
                     ),
                     Divider(
                       color: Colors.black38,
                     ),
-                    Expanded(
+                    Flexible(
                       child: Consumer<PlayerProvider>(
                         builder: (context, playerProvider, child) =>
                             PlayerSettingsWidget(),
