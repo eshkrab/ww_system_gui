@@ -55,7 +55,6 @@ class _PlayerSettingsWidgetState extends State<PlayerSettingsWidget> {
             hintText: 'Enter a number between 1-150',
           ),
           keyboardType: TextInputType.number,
-          initialValue: playerProvider.player.fps.toString(),
           validator: (value) {
             if (value == null ||
                 value.isEmpty ||
