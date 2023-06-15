@@ -94,4 +94,16 @@ class MediaFileProvider extends ChangeNotifier {
       return false;
     }
   }
+
+  void deleteItem(int index) {
+    deleteMedia(_mediaFiles[index].name);
+  }
+
+  Future<void> deleteAllItems() async {
+    await deleteAllMedia();
+  }
+
+  Future<void> saveChanges() async {
+    await fetchMediaFiles();
+  }
 }

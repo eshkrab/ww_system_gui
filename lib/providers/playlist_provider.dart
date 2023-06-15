@@ -63,6 +63,15 @@ class PlaylistProvider extends ChangeNotifier {
     savePlaylist();
   }
 
+  Future<void> saveChanges() async {
+    await savePlaylist();
+  }
+
+  void clearPlaylist() {
+    _playlist.playlist.clear();
+    notifyListeners();
+  }
+
   void addItem(MediaFile file) {
     _playlist.playlist.add(file);
     notifyListeners();
