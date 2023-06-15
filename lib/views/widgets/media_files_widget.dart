@@ -10,11 +10,20 @@ class MediaFilesWidget extends StatefulWidget {
 
 class _MediaFilesWidgetState extends State<MediaFilesWidget> {
   bool _editing = false;
+  Future<void>? _fetchMediaFilesFuture;
 
   void _toggleEditing() {
     setState(() {
       _editing = !_editing;
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchMediaFilesFuture =
+        Provider.of<MediaFileProvider>(context, listen: false)
+            .fetchMediaFiles();
   }
 
   @override
