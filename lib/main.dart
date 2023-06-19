@@ -20,13 +20,17 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  AppSettings createAppSettings() {
+    return AppSettings(
+      isDarkModeEnabled: true,
+      serverIP: 'ww-system.local',
+      serverPort: 8000,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    AppSettings appSettings = AppSettings(
-        // isDarkModeEnabled: true, serverIP: '192.168.86.103', serverPort: 8000);
-        isDarkModeEnabled: true,
-        serverIP: 'ww_system.local',
-        serverPort: 8000);
+    AppSettings appSettings = createAppSettings();
 
     final playerProvider = PlayerProvider(
         appSettings: appSettings,
@@ -40,26 +44,26 @@ class MyApp extends StatelessWidget {
 
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-            create: (_) => AppSettingsProvider(appSettings: appSettings)),
         ChangeNotifierProvider(create: (_) => playerProvider),
         ChangeNotifierProvider(create: (_) => mediaFileProvider),
         ChangeNotifierProvider(create: (_) => playlistProvider),
-        ChangeNotifierProvider(
-            create: (_) => NavigationProvider()), // <--- Add this
+        ChangeNotifierProvider(create: (_) => NavigationProvider()),
       ],
-      child: Consumer<AppSettingsProvider>(
-        builder: (context, appSettingsProvider, child) {
-          return MaterialApp(
-            title: appTitle,
-            theme: wwLightTheme,
-            darkTheme: wwDarkTheme,
-            themeMode: appSettingsProvider.appSettings.isDarkModeEnabled
-                ? ThemeMode.dark
-                : ThemeMode.light,
-            home: MyHomePage(title: appTitle),
-          );
-        },
+      child: ChangeNotifierProvider(
+        create: (_) => AppSettingsProvider(appSettings: appSettings),
+        child: Consumer<AppSettingsProvider>(
+          builder: (context, appSettingsProvider, child) {
+            return MaterialApp(
+              title: appTitle,
+              theme: wwLightTheme,
+              darkTheme: wwDarkTheme,
+              themeMode: appSettingsProvider.appSettings.isDarkModeEnabled
+                  ? ThemeMode.dark
+                  : ThemeMode.light,
+              home: MyHomePage(title: appTitle),
+            );
+          },
+        ),
       ),
     );
   }
@@ -72,9 +76,13 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<AppSettingsProvider, NavigationProvider>(
-      builder: (context, appSettingsProvider, navProvider, _) {
+    return Consumer3<AppSettingsProvider, NavigationProvider, PlayerProvider>(
+      builder: (context, appSettingsProvider, navProvider, playerProvider, _) {
         return Scaffold(
+          appBar: AppBar(
+            title: Text(
+                "${appSettingsProvider.appSettings.serverIP}:${appSettingsProvider.appSettings.serverPort}"),
+          ),
           body: IndexedStack(
             index: navProvider.selectedIndex,
             children: [

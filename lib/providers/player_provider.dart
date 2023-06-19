@@ -19,11 +19,20 @@ class PlayerProvider extends ChangeNotifier {
 
   Player get player => _player;
 
-  void updateAppSettings(AppSettings _appSettings) {
-    appSettings = _appSettings;
-    _apiService = PlayerApiService(
-        appSettings:
-            appSettings); // Create new instance of API Service with updated settings
+  // Create a method to update the API service instances with the updated AppSettings
+  void updateAppSettings(AppSettings newSettings) {
+    // Set the new AppSettings
+    _appSettings = newSettings;
+
+    // Create new instances of API service with the updated settings
+    _apiService = PlayerApiService(appSettings: newSettings);
+    _playlistApiService = PlaylistApiService(appSettings: newSettings);
+
+    // Call methods that use the updated API services
+    fetchPlayerState();
+    fetchPlayerBrightness();
+    fetchPlayerFPS();
+
     notifyListeners();
   }
 

@@ -17,11 +17,16 @@ class MediaFileProvider extends ChangeNotifier {
 
   List<MediaFile> get mediaFiles => _mediaFiles;
 
-  void updateAppSettings(AppSettings _appSettings) {
-    appSettings = _appSettings;
-    _apiService = MediaApiService(
-        appSettings:
-            appSettings); // Create new instance of API Service with updated settings
+  void updateAppSettings(AppSettings newSettings) {
+    // Set the new AppSettings
+    _appSettings = newSettings;
+
+    // Create new instance of API Service with updated settings
+    _apiService = MediaApiService(appSettings: newSettings);
+
+    // Call method that uses the updated API service
+    fetchMediaFiles();
+
     notifyListeners();
   }
 

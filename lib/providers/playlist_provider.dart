@@ -18,9 +18,14 @@ class PlaylistProvider extends ChangeNotifier {
 
   Playlist get playlist => _playlist;
 
-  void updateAppSettings(AppSettings _appSettings) {
-    appSettings = _appSettings;
-    _apiService = PlaylistApiService(appSettings: appSettings);
+  void updateAppSettings(AppSettings newSettings) {
+    // Set the new AppSettings
+    appSettings = newSettings;
+
+    // Create new instance of API Service with updated settings
+    _apiService = PlaylistApiService(appSettings: newSettings);
+    // Call method that uses the updated API service
+    fetchPlaylist();
     notifyListeners();
   }
 

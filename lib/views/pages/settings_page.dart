@@ -26,6 +26,8 @@ class _SettingsPageState extends State<SettingsPage>
   Future<void> _refreshSettingsData(BuildContext context,
       {bool listen = true}) {
     final playerProvider = Provider.of<PlayerProvider>(context, listen: listen);
+    final settingsProvider =
+        Provider.of<AppSettingsProvider>(context, listen: listen);
     // Provide the way how your widgets refresh their data
     // Typically, this should include calls to some methods like `fetchPlayerBrightness()`, `fetchPlayerFPS()`, etc.
     // It should return a Future
@@ -81,43 +83,3 @@ class _SettingsPageState extends State<SettingsPage>
     );
   }
 }
-
-// import 'package:flutter/material.dart';
-// import 'package:provider/provider.dart';
-// import '../widgets/settings_form_widget.dart';
-// import '../widgets/player_settings_widget.dart';
-// import '../../providers/settings_provider.dart';
-// import '../../providers/player_provider.dart';
-//
-// class SettingsPage extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     final playerProvider = Provider.of<PlayerProvider>(context);
-//     playerProvider.fetchPlayerBrightness();
-//     playerProvider.fetchPlayerFPS();
-//
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text('Settings'),
-//       ),
-//       body: Padding(
-//         padding: EdgeInsets.all(16.0),
-//         child: Column(
-//           children: [
-//             Expanded(
-//               child: SettingsWidget(),
-//               flex: 1,
-//             ),
-//             Divider(
-//               color: Colors.black38,
-//             ),
-//             Expanded(
-//               child: PlayerSettingsWidget(),
-//               flex: 1,
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }

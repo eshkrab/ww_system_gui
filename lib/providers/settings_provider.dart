@@ -19,6 +19,12 @@ class AppSettingsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void updateServerSettings({String? serverIP, int? serverPort}) {
+    _appSettings =
+        _appSettings.copyWith(serverIP: serverIP, serverPort: serverPort);
+    notifyListeners();
+  }
+
   void toggleDarkMode() {
     _appSettings = _appSettings.copyWith(
         isDarkModeEnabled: !_appSettings.isDarkModeEnabled);
