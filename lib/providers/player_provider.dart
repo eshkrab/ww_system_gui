@@ -22,7 +22,7 @@ class PlayerProvider extends ChangeNotifier {
   // Create a method to update the API service instances with the updated AppSettings
   void updateAppSettings(AppSettings newSettings) {
     // Set the new AppSettings
-    _appSettings = newSettings;
+    appSettings = newSettings;
 
     // Create new instances of API service with the updated settings
     _apiService = PlayerApiService(appSettings: newSettings);

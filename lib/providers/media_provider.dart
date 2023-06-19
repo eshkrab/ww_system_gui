@@ -19,7 +19,7 @@ class MediaFileProvider extends ChangeNotifier {
 
   void updateAppSettings(AppSettings newSettings) {
     // Set the new AppSettings
-    _appSettings = newSettings;
+    appSettings = newSettings;
 
     // Create new instance of API Service with updated settings
     _apiService = MediaApiService(appSettings: newSettings);
