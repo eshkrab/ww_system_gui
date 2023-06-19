@@ -20,50 +20,53 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  AppSettings createAppSettings() {
-    return AppSettings(
+  @override
+  Widget build(BuildContext context) {
+    final appSettings = AppSettings(
       isDarkModeEnabled: true,
       serverIP: 'ww-system.local',
       serverPort: 8000,
     );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    AppSettings appSettings = createAppSettings();
-
-    final playerProvider = PlayerProvider(
-        appSettings: appSettings,
-        player: Player(state: '', brightness: 1.0, fps: 1.0));
 
     final mediaFileProvider = MediaFileProvider(appSettings: appSettings);
 
+    final playerProvider = PlayerProvider(
+      appSettings: appSettings,
+      player: Player(state: '', brightness: 1.0, fps: 1.0),
+    );
+
     final playlistProvider = PlaylistProvider(
-        appSettings: appSettings,
-        playlist: Playlist(playlist: [], mode: 'repeat'));
+      appSettings: appSettings,
+      playlist: Playlist(playlist: [], mode: 'repeat'),
+    );
+
+    final settingsProvider = AppSettingsProvider(
+      appSettings: appSettings,
+      mediaProvider: mediaFileProvider,
+      playerProvider: playerProvider,
+      playlistProvider: playlistProvider,
+    );
 
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => playerProvider),
-        ChangeNotifierProvider(create: (_) => mediaFileProvider),
-        ChangeNotifierProvider(create: (_) => playlistProvider),
-        ChangeNotifierProvider(create: (_) => NavigationProvider()),
+        ChangeNotifierProvider.value(value: mediaFileProvider),
+        ChangeNotifierProvider.value(value: playerProvider),
+        ChangeNotifierProvider.value(value: playlistProvider),
+        ChangeNotifierProvider.value(value: NavigationProvider()),
+        ChangeNotifierProvider.value(value: settingsProvider),
       ],
-      child: ChangeNotifierProvider(
-        create: (_) => AppSettingsProvider(appSettings: appSettings),
-        child: Consumer<AppSettingsProvider>(
-          builder: (context, appSettingsProvider, child) {
-            return MaterialApp(
-              title: appTitle,
-              theme: wwLightTheme,
-              darkTheme: wwDarkTheme,
-              themeMode: appSettingsProvider.appSettings.isDarkModeEnabled
-                  ? ThemeMode.dark
-                  : ThemeMode.light,
-              home: MyHomePage(title: appTitle),
-            );
-          },
-        ),
+      child: Consumer<AppSettingsProvider>(
+        builder: (context, appSettingsProvider, child) {
+          return MaterialApp(
+            title: appTitle,
+            theme: wwLightTheme,
+            darkTheme: wwDarkTheme,
+            themeMode: appSettingsProvider.appSettings.isDarkModeEnabled
+                ? ThemeMode.dark
+                : ThemeMode.light,
+            home: MyHomePage(title: appTitle),
+          );
+        },
       ),
     );
   }
