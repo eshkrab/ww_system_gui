@@ -119,7 +119,7 @@ class PlayerProvider extends ChangeNotifier {
       if (success) {
         _player = _player.copyWith(brightness: brightness);
         //put a 50 millis delay
-        await Future.delayed(Duration(milliseconds: 50));
+        // await Future.delayed(Duration(milliseconds: 50));
         await fetchPlayerBrightness(); // Query the API endpoint for brightness
         notifyListeners();
         return true;
