@@ -46,6 +46,8 @@ class PlayerProvider extends ChangeNotifier {
       bool success = await _apiService.setState(state);
       if (success) {
         // _player = _player.copyWith(state: state);
+        //delay for 10 millis
+        await Future.delayed(Duration(milliseconds: 100));
         await fetchPlayerState(); // Query the API endpoint for player state
         // notifyListeners();
         return true;
