@@ -271,20 +271,6 @@ class PlayerApiService extends ApiService {
     }
   }
 
-  Future<Map<String, dynamic>> fetchNodes() async {
-    // Replace this URL with the appropriate API endpoint for your application
-
-    final response = await http.get(Uri.parse('${getBaseUrl()}/nodes'));
-
-    if (response.statusCode == 200) {
-      // If the server returns a 200 OK response, parse the JSON.
-      return jsonDecode(response.body) as Map<String, dynamic>;
-    } else {
-      // If the server returns an error, throw an exception.
-      throw Exception('Failed to load nodes list');
-    }
-  }
-
   // Future<Image?> getCurrentThumbnail(String filename) async {
   //   String currentMediaUrl = '${getBaseUrl()}/thumbnail/$filename';
   //   final response = await http.get(Uri.parse(currentMediaUrl));
@@ -301,4 +287,18 @@ class PlayerApiService extends ApiService {
 
 class SettingsApiService extends ApiService {
   SettingsApiService({required AppSettings appSettings}) : super(appSettings);
+
+  Future<Map<String, dynamic>> fetchNodes() async {
+    // Replace this URL with the appropriate API endpoint for your application
+
+    final response = await http.get(Uri.parse('${getBaseUrl()}/nodes'));
+
+    if (response.statusCode == 200) {
+      // If the server returns a 200 OK response, parse the JSON.
+      return jsonDecode(response.body) as Map<String, dynamic>;
+    } else {
+      // If the server returns an error, throw an exception.
+      throw Exception('Failed to load nodes list');
+    }
+  }
 }
