@@ -72,54 +72,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatelessWidget {
-  final String title;
-
-  MyHomePage({required this.title});
-
-  @override
-  Widget build(BuildContext context) {
-    return Consumer3<AppSettingsProvider, NavigationProvider, PlayerProvider>(
-      builder: (context, appSettingsProvider, navProvider, playerProvider, _) {
-        return Scaffold(
-          appBar: AppBar(
-            title: DropdownButton(
-              value: appSettingsProvider.appSettings.serverIP,
-              onChanged: (value) {
-                appSettingsProvider.updateServerSettings(
-                    serverIP: value.toString());
-                // appSettingsProvider.notifyListeners(); // Update dependents
-              },
-              items: appSettingsProvider.appSettings.serverNodes
-                  .map<DropdownMenuItem<String>>((node) {
-                return DropdownMenuItem(
-                  value: node.ip ?? node.hostname!,
-                  child: Text(node.ip ?? node.hostname!),
-                );
-              }).toList(),
-            ),
-          ),
-          body: IndexedStack(
-            index: navProvider.selectedIndex,
-            children: [
-              PlayerPage(),
-              MediaPage(),
-              SettingsPage(),
-            ],
-          ),
-          bottomNavigationBar: BottomNavigationBar(
-            items: bottomNavItems,
-            currentIndex: navProvider.selectedIndex,
-            onTap: navProvider.onItemTapped,
-            selectedItemColor: Theme.of(context).colorScheme.onPrimaryContainer,
-            unselectedItemColor: Theme.of(context).colorScheme.onBackground,
-          ),
-        );
-      },
-    );
-  }
-}
-
 // class MyHomePage extends StatelessWidget {
 //   final String title;
 //
@@ -131,8 +83,21 @@ class MyHomePage extends StatelessWidget {
 //       builder: (context, appSettingsProvider, navProvider, playerProvider, _) {
 //         return Scaffold(
 //           appBar: AppBar(
-//             title: Text(
-//                 "${appSettingsProvider.appSettings.serverIP}:${appSettingsProvider.appSettings.serverPort}"),
+//             title: DropdownButton(
+//               value: appSettingsProvider.appSettings.serverIP,
+//               onChanged: (value) {
+//                 appSettingsProvider.updateServerSettings(
+//                     serverIP: value.toString());
+//                 // appSettingsProvider.notifyListeners(); // Update dependents
+//               },
+//               items: appSettingsProvider.appSettings.serverNodes
+//                   .map<DropdownMenuItem<String>>((node) {
+//                 return DropdownMenuItem(
+//                   value: node.ip ?? node.hostname!,
+//                   child: Text(node.ip ?? node.hostname!),
+//                 );
+//               }).toList(),
+//             ),
 //           ),
 //           body: IndexedStack(
 //             index: navProvider.selectedIndex,
@@ -154,3 +119,38 @@ class MyHomePage extends StatelessWidget {
 //     );
 //   }
 // }
+
+class MyHomePage extends StatelessWidget {
+  final String title;
+
+  MyHomePage({required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer3<AppSettingsProvider, NavigationProvider, PlayerProvider>(
+      builder: (context, appSettingsProvider, navProvider, playerProvider, _) {
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(
+                "${appSettingsProvider.appSettings.serverIP}:${appSettingsProvider.appSettings.serverPort}"),
+          ),
+          body: IndexedStack(
+            index: navProvider.selectedIndex,
+            children: [
+              PlayerPage(),
+              MediaPage(),
+              SettingsPage(),
+            ],
+          ),
+          bottomNavigationBar: BottomNavigationBar(
+            items: bottomNavItems,
+            currentIndex: navProvider.selectedIndex,
+            onTap: navProvider.onItemTapped,
+            selectedItemColor: Theme.of(context).colorScheme.onPrimaryContainer,
+            unselectedItemColor: Theme.of(context).colorScheme.onBackground,
+          ),
+        );
+      },
+    );
+  }
+}
