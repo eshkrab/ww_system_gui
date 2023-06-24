@@ -13,12 +13,13 @@ class PlayerPage extends StatefulWidget {
   _PlayerPageState createState() => _PlayerPageState();
 }
 
-class _PlayerPageState extends State<PlayerPage>
-    with AutomaticKeepAliveClientMixin<PlayerPage> {
+// class _PlayerPageState extends State<PlayerPage>
+//     with AutomaticKeepAliveClientMixin<PlayerPage> {
+class _PlayerPageState extends State<PlayerPage> {
   late Future<void> _fetchPlayer;
 
-  @override
-  bool get wantKeepAlive => true;
+  // @override
+  // bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -39,7 +40,7 @@ class _PlayerPageState extends State<PlayerPage>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context); // needed because of AutomaticKeepAliveClientMixin
+    // super.build(context); // needed because of AutomaticKeepAliveClientMixin
     final playerProvider = Provider.of<PlayerProvider>(context);
 
     return Scaffold(

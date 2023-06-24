@@ -10,8 +10,9 @@ class SettingsPage extends StatefulWidget {
   _SettingsPageState createState() => _SettingsPageState();
 }
 
-class _SettingsPageState extends State<SettingsPage>
-    with AutomaticKeepAliveClientMixin<SettingsPage> {
+// class _SettingsPageState extends State<SettingsPage>
+//     with AutomaticKeepAliveClientMixin<SettingsPage> {
+class _SettingsPageState extends State<SettingsPage> {
   late Future<void> _fetchPlayer;
 
   @override
@@ -20,11 +21,11 @@ class _SettingsPageState extends State<SettingsPage>
     _fetchPlayer = _refreshSettingsData(context, listen: false);
   }
 
-  @override
-  bool get wantKeepAlive => true;
+  // @override
+  // bool get wantKeepAlive => true;
 
   Future<void> _refreshSettingsData(BuildContext context,
-      {bool listen = true}) {
+      {bool listen = true}) async {
     final playerProvider = Provider.of<PlayerProvider>(context, listen: listen);
     final settingsProvider =
         Provider.of<AppSettingsProvider>(context, listen: listen);
@@ -32,15 +33,16 @@ class _SettingsPageState extends State<SettingsPage>
     // Typically, this should include calls to some methods like `fetchPlayerBrightness()`, `fetchPlayerFPS()`, etc.
     // It should return a Future
     // For example:
-    return Future.wait([
+    await Future.wait([
       playerProvider.fetchPlayerBrightness(),
       playerProvider.fetchPlayerFPS(),
     ]);
+    await settingsProvider.fetchNodes();
   }
 
   @override
   Widget build(BuildContext context) {
-    super.build(context); // needed because of AutomaticKeepAliveClientMixin
+    // super.build(context); // needed because of AutomaticKeepAliveClientMixin
     return Scaffold(
       appBar: AppBar(
         title: Text('Settings'),

@@ -88,16 +88,15 @@ class MyHomePage extends StatelessWidget {
             title: DropdownButton(
               value: appSettingsProvider.appSettings.serverIP,
               onChanged: (value) {
-                String serverIpWithLocal = '${value.toString()}.local';
                 appSettingsProvider.updateServerSettings(
-                  serverIP: serverIpWithLocal,
+                  serverIP: value.toString(),
                 );
               },
               items: appSettingsProvider.appSettings.serverNodes
                   .map<DropdownMenuItem<String>>((node) {
                 return DropdownMenuItem(
                   value: node.ip ?? node.hostname!,
-                  child: Text(node.ip ?? ('${node.hostname}.local')),
+                  child: Text(node.ip ?? node.hostname!),
                 );
               }).toList(),
             ),

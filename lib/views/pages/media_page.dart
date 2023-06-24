@@ -10,10 +10,11 @@ class MediaPage extends StatefulWidget {
   _MediaPageState createState() => _MediaPageState();
 }
 
-class _MediaPageState extends State<MediaPage>
-    with AutomaticKeepAliveClientMixin<MediaPage> {
-  @override
-  bool get wantKeepAlive => true;
+// class _MediaPageState extends State<MediaPage>
+//     with AutomaticKeepAliveClientMixin<MediaPage> {
+class _MediaPageState extends State<MediaPage> {
+  // @override
+  // bool get wantKeepAlive => true;
 
   Future<void> _refreshMediaData(BuildContext context) {
     // You'll need to provide the way how your widgets refresh their data
@@ -28,7 +29,7 @@ class _MediaPageState extends State<MediaPage>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context); // needed because of AutomaticKeepAliveClientMixin
+    // super.build(context); // needed because of AutomaticKeepAliveClientMixin
     return Scaffold(
       appBar: AppBar(
         title: Text('Media Page'),
