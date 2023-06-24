@@ -64,7 +64,8 @@ class MyApp extends StatelessWidget {
             themeMode: appSettingsProvider.appSettings.isDarkModeEnabled
                 ? ThemeMode.dark
                 : ThemeMode.light,
-            home: MyHomePage(title: appTitle),
+            home:
+                MyHomePage(title: appTitle, settingsProvider: settingsProvider),
           );
         },
       ),
@@ -74,8 +75,9 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatelessWidget {
   final String title;
+  final AppSettingsProvider settingsProvider; // add this
 
-  MyHomePage({required this.title});
+  MyHomePage({required this.title, required this.settingsProvider});
 
   @override
   Widget build(BuildContext context) {
@@ -97,6 +99,12 @@ class MyHomePage extends StatelessWidget {
                 );
               }).toList(),
             ),
+            actions: [
+              IconButton(
+                icon: Icon(Icons.refresh),
+                onPressed: () => settingsProvider.fetchNodes(),
+              ),
+            ],
           ),
           body: IndexedStack(
             index: navProvider.selectedIndex,
