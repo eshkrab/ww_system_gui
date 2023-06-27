@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final appSettings = AppSettings(
       isDarkModeEnabled: true,
-      serverIP: 'ww-system-claude.local',
+      serverIP: 'litpi.local',
       serverPort: 8000,
     );
 
