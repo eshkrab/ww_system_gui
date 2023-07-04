@@ -4,9 +4,10 @@ server {
 
   location / {
     if ($request_method = GET) {
-        rewrite ^/(.*)$ /$1?serverIP=$server_ip&serverPort=$server_port;
+        set $args $args&serverIP=$server_ip&serverPort=$server_port;
     }
 
     try_files $uri$args $uri$args/ /index.html$args =404;
   }
 }
+
