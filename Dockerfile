@@ -47,7 +47,7 @@ RUN chmod -R 755 /usr/share/nginx/html
 # # Copy the HTML file to the Nginx document root
 # COPY index.html /usr/share/nginx/html
 ########################################### URL Rewriting ###########################################
-RUN mv /usr/share/nginx/html/index.html /usr/share/nginx/html/index.html.template
+# RUN mv /usr/share/nginx/html/index.html /usr/share/nginx/html/index.html.template
 COPY ./docker-entrypoint.sh /
 RUN chmod +x /docker-entrypoint.sh
 ENTRYPOINT ["/docker-entrypoint.sh"]
