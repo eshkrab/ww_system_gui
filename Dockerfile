@@ -48,3 +48,5 @@ RUN mv /usr/share/nginx/html/index.html /usr/share/nginx/html/index.html.templat
 COPY ./docker-entrypoint.sh /
 RUN chmod +x /docker-entrypoint.sh
 ENTRYPOINT ["/docker-entrypoint.sh"]
+RUN ls /usr/share/nginx/html
+RUN env
