@@ -86587,7 +86587,7 @@ A.Mb.prototype={
 H(a){var s,r,q,p,o,n,m,l,k,j=$.aEq(),i=J.b2(J.b2(j.h(0,"window"),"_env_"),"SERVER_IP"),h=J.b2(J.b2(j.h(0,"window"),"_env_"),"SERVER_PORT")
 if(h!=null){j=A.Nj(h,null)
 s=j==null?8000:j}else s=8000
-r=i==null?"litpiii.local":i
+r=i==null?"litpi2.local":i
 q=new A.HX(!0,r,s,A.b([A.atv(null,r)],t.f2))
 j=t.cg
 p=A.b([],j)
