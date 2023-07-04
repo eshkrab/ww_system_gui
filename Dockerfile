@@ -54,5 +54,3 @@ ENTRYPOINT ["/docker-entrypoint.sh"]
 
 # For debugging
 RUN ls /usr/share/nginx/html
-RUN env
-RUN nginx -t
