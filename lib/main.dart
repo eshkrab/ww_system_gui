@@ -23,25 +23,26 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // String? serverIPArg = Uri.base.queryParameters['serverIP'];
-    // String? serverPortArg = Uri.base.queryParameters['serverPort'];
-    String? serverIPArg = js.context['window']['_env_']['SERVER_IP'];
-    String? serverPortArg = js.context['window']['_env_']['SERVER_PORT'];
-
-    int serverPortA =
-        serverPortArg != null ? int.tryParse(serverPortArg) ?? 8000 : 8000;
-    String serverIPA = serverIPArg ?? 'litpiii.local';
-
-    final appSettings = AppSettings(
-      isDarkModeEnabled: true,
-      serverIP: serverIPA,
-      serverPort: serverPortA,
-    );
+    // // String? serverIPArg = Uri.base.queryParameters['serverIP'];
+    // // String? serverPortArg = Uri.base.queryParameters['serverPort'];
+    // String? serverIPArg = js.context['window']['_env_']['SERVER_IP'];
+    // String? serverPortArg = js.context['window']['_env_']['SERVER_PORT'];
+    //
+    // int serverPortA =
+    //     serverPortArg != null ? int.tryParse(serverPortArg) ?? 8000 : 8000;
+    // String serverIPA = serverIPArg ?? 'litpiii.local';
+    //
     // final appSettings = AppSettings(
     //   isDarkModeEnabled: true,
-    //   serverIP: 'litpi.local',
-    //   serverPort: 8000,
+    //   serverIP: serverIPA,
+    //   serverPort: serverPortA,
     // );
+    /////////////////////////////////////
+    final appSettings = AppSettings(
+      isDarkModeEnabled: true,
+      serverIP: 'litpi.local',
+      serverPort: 8000,
+    );
 
     final mediaFileProvider = MediaFileProvider(appSettings: appSettings);
 
