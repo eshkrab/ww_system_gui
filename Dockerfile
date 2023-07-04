@@ -50,3 +50,4 @@ RUN chmod +x /docker-entrypoint.sh
 ENTRYPOINT ["/docker-entrypoint.sh"]
 RUN ls /usr/share/nginx/html
 RUN env
+RUN nginx -t
