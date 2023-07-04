@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
 
     int serverPortA =
         serverPortArg != null ? int.tryParse(serverPortArg) ?? 8000 : 8000;
-    String serverIPA = serverIPArg ?? 'litpi2.local';
+    String serverIPA = serverIPArg ?? 'litpi-marcelle.local';
 
     //print what the values end up being
     print('serverIPArg: $serverIPArg');
