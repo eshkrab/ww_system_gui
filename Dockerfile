@@ -31,7 +31,7 @@ FROM nginx:bullseye
 RUN rm /etc/nginx/conf.d/default.conf
 
 # Add a new configuration file
-COPY nginx.conf /etc/nginx/conf.d/
+COPY nginx.template /etc/nginx/conf.d/
 
 # RUN mkdir /app/
 # COPY . /app/
@@ -48,6 +48,8 @@ RUN mv /usr/share/nginx/html/index.html /usr/share/nginx/html/index.html.templat
 COPY ./docker-entrypoint.sh /
 RUN chmod +x /docker-entrypoint.sh
 ENTRYPOINT ["/docker-entrypoint.sh"]
+
+# For debugging
 RUN ls /usr/share/nginx/html
 RUN env
 RUN nginx -t
