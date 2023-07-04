@@ -22,11 +22,23 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    String? serverIPArg = Uri.base.queryParameters['serverIP'];
+    String? serverPortArg = Uri.base.queryParameters['serverPort'];
+
+    int serverPortA =
+        serverPortArg != null ? int.tryParse(serverPortArg) ?? 8000 : 8000;
+    String serverIPA = serverIPArg ?? 'litpi.local';
+
     final appSettings = AppSettings(
       isDarkModeEnabled: true,
-      serverIP: 'litpi.local',
-      serverPort: 8000,
+      serverIP: serverIPA,
+      serverPort: serverPortA,
     );
+    // final appSettings = AppSettings(
+    //   isDarkModeEnabled: true,
+    //   serverIP: 'litpi.local',
+    //   serverPort: 8000,
+    // );
 
     final mediaFileProvider = MediaFileProvider(appSettings: appSettings);
 
