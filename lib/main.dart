@@ -25,12 +25,17 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     // String? serverIPArg = Uri.base.queryParameters['serverIP'];
     // String? serverPortArg = Uri.base.queryParameters['serverPort'];
+
     String? serverIPArg = js.context['window']['_env_']['SERVER_IP'];
     String? serverPortArg = js.context['window']['_env_']['SERVER_PORT'];
 
     int serverPortA =
         serverPortArg != null ? int.tryParse(serverPortArg) ?? 8000 : 8000;
     String serverIPA = serverIPArg ?? 'litpi2.local';
+
+    //print what the values end up being
+    print('serverIPArg: $serverIPArg');
+    print('serverPortArg: $serverPortArg');
 
     final appSettings = AppSettings(
       isDarkModeEnabled: true,
