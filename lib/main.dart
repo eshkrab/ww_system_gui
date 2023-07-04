@@ -13,7 +13,8 @@ import 'providers/settings_provider.dart';
 import 'providers/player_provider.dart';
 import 'providers/media_provider.dart';
 import 'providers/playlist_provider.dart';
-import 'providers/navigation_provider.dart'; // <--- Add this
+import 'providers/navigation_provider.dart';
+import 'dart:js' as js;
 
 void main() {
   runApp(MyApp());
@@ -22,12 +23,14 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    String? serverIPArg = Uri.base.queryParameters['serverIP'];
-    String? serverPortArg = Uri.base.queryParameters['serverPort'];
+    // String? serverIPArg = Uri.base.queryParameters['serverIP'];
+    // String? serverPortArg = Uri.base.queryParameters['serverPort'];
+    String? serverIPArg = js.context['window']['_env_']['SERVER_IP'];
+    String? serverPortArg = js.context['window']['_env_']['SERVER_PORT'];
 
     int serverPortA =
         serverPortArg != null ? int.tryParse(serverPortArg) ?? 8000 : 8000;
-    String serverIPA = serverIPArg ?? 'litpi.local';
+    String serverIPA = serverIPArg ?? 'litpiii.local';
 
     final appSettings = AppSettings(
       isDarkModeEnabled: true,
