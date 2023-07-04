@@ -41,6 +41,9 @@ COPY nginx.template /etc/nginx/conf.d/
 # Copy the compiled flutter files to the Nginx document root
 COPY ./build/web /usr/share/nginx/html
 
+# Change ownership to nginx user
+RUN chown -R nginx:nginx /usr/share/nginx/html
+
 # Set appropriate permissions
 RUN chmod -R 755 /usr/share/nginx/html
 
