@@ -25,9 +25,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     // String? serverIPArg = Uri.base.queryParameters['serverIP'];
     // String? serverPortArg = Uri.base.queryParameters['serverPort'];
-
-    String? serverIPArg = js.context['window']['_env_']['SERVER_IP'];
-    String? serverPortArg = js.context['window']['_env_']['SERVER_PORT'];
+    String? serverIPArg = js.context['_env_']['SERVER_IP'];
+    String? serverPortArg = js.context['_env_']['SERVER_PORT'];
 
     int serverPortA =
         serverPortArg != null ? int.tryParse(serverPortArg) ?? 8000 : 8000;
@@ -42,6 +41,7 @@ class MyApp extends StatelessWidget {
       serverIP: serverIPA,
       serverPort: serverPortA,
     );
+    // /////////////////////////////////////
     // final appSettings = AppSettings(
     //   isDarkModeEnabled: true,
     //   serverIP: 'litpi.local',
