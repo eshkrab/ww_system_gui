@@ -30,8 +30,8 @@ FROM nginx:bullseye
 # Remove the default Nginx configuration file
 RUN rm /etc/nginx/conf.d/default.conf
 
-# Add a new configuration file
-COPY nginx.template /etc/nginx/conf.d/
+# Copy the Nginx configuration file
+COPY nginx.template /etc/nginx/conf.d/nginx.conf
 
 # RUN mkdir /app/
 # COPY . /app/
@@ -41,16 +41,9 @@ COPY nginx.template /etc/nginx/conf.d/
 # Copy the compiled flutter files to the Nginx document root
 COPY ./build/web /usr/share/nginx/html
 
-# Set appropriate permissions
-RUN chmod -R 755 /usr/share/nginx/html
+# # Set appropriate permissions
+# RUN chmod -R 755 /usr/share/nginx/html
 
-# # Copy the HTML file to the Nginx document root
-# COPY index.html /usr/share/nginx/html
-########################################### URL Rewriting ###########################################
-# RUN mv /usr/share/nginx/html/index.html /usr/share/nginx/html/index.html.template
-COPY ./docker-entrypoint.sh /
-RUN chmod +x /docker-entrypoint.sh
-ENTRYPOINT ["/docker-entrypoint.sh"]
 
 # For debugging
 RUN ls /usr/share/nginx/html
