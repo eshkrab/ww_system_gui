@@ -8,7 +8,7 @@ cd build/web
 
 # Create config.js
 echo "window._env_ = {
-  SERVER_IP: 'litpiii.local',
+  SERVER_IP: 'litpi.local',
   SERVER_PORT: '8000'
 }" > config.js
 
